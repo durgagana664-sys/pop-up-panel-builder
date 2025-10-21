@@ -1,4 +1,5 @@
 import { NavLink, useLocation } from "react-router-dom";
+import { useState } from "react";
 import {
   LayoutDashboard,
   ClipboardList,
@@ -10,6 +11,7 @@ import {
   Bus,
   CreditCard,
   Search,
+  ChevronDown,
 } from "lucide-react";
 import {
   Sidebar,
@@ -21,14 +23,28 @@ import {
   SidebarMenuButton,
   useSidebar,
 } from "@/components/ui/sidebar";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 
 const menuItems = [
   { title: "Dashboard", url: "/", icon: LayoutDashboard },
   { title: "Assignment", url: "/assignment", icon: ClipboardList },
   { title: "Time Table", url: "/timetable", icon: Calendar },
   { title: "Student Management", url: "/students", icon: Users },
-  { title: "Download Statistics", url: "/download-stats", icon: Download },
-  { title: "Student Activity", url: "/student-activity", icon: TrendingUp },
+  { 
+    title: "Download Statistics", 
+    icon: Download,
+    subItems: [
+      { title: "Student Download Status", url: "/download-stats/student" },
+      { title: "Staff Download Status", url: "/download-stats/staff" },
+      { title: "Parent Download Status", url: "/download-stats/parent" },
+      { title: "Student Activity", url: "/download-stats/student-activity" },
+      { title: "Parent Activity", url: "/download-stats/parent-activity" },
+    ]
+  },
   { title: "Fee Management", url: "/fee-management", icon: DollarSign },
   { title: "Transport Management", url: "/transport", icon: Bus },
   { title: "ID Card / Bus Pass", url: "/id-cards", icon: CreditCard },
@@ -38,6 +54,9 @@ export function AppSidebar() {
   const { state } = useSidebar();
   const location = useLocation();
   const isCollapsed = state === "collapsed";
+  const [openDownloadStats, setOpenDownloadStats] = useState(
+    location.pathname.startsWith("/download-stats")
+  );
 
   const getNavCls = (isActive: boolean) =>
     isActive
@@ -81,16 +100,63 @@ export function AppSidebar() {
             <SidebarMenu>
               {menuItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <NavLink
-                      to={item.url}
-                      end={item.url === "/"}
-                      className={({ isActive }) => getNavCls(isActive)}
+                  {item.subItems ? (
+                    <Collapsible
+                      open={openDownloadStats}
+                      onOpenChange={setOpenDownloadStats}
+                      className="w-full"
                     >
-                      <item.icon className="h-5 w-5" />
-                      {!isCollapsed && <span>{item.title}</span>}
-                    </NavLink>
-                  </SidebarMenuButton>
+                      <CollapsibleTrigger asChild>
+                        <SidebarMenuButton
+                          className={
+                            location.pathname.startsWith("/download-stats")
+                              ? "bg-sidebar-accent text-sidebar-primary font-semibold"
+                              : "hover:bg-sidebar-accent/50 text-sidebar-foreground"
+                          }
+                        >
+                          <item.icon className="h-5 w-5" />
+                          {!isCollapsed && (
+                            <>
+                              <span>{item.title}</span>
+                              <ChevronDown
+                                className={`ml-auto h-4 w-4 transition-transform ${
+                                  openDownloadStats ? "rotate-180" : ""
+                                }`}
+                              />
+                            </>
+                          )}
+                        </SidebarMenuButton>
+                      </CollapsibleTrigger>
+                      {!isCollapsed && (
+                        <CollapsibleContent>
+                          <div className="ml-6 mt-1 space-y-1 border-l border-sidebar-border/50 pl-3">
+                            {item.subItems.map((subItem) => (
+                              <NavLink
+                                key={subItem.url}
+                                to={subItem.url}
+                                className={({ isActive }) =>
+                                  `block rounded-md px-3 py-2 text-sm ${getNavCls(isActive)}`
+                                }
+                              >
+                                {subItem.title}
+                              </NavLink>
+                            ))}
+                          </div>
+                        </CollapsibleContent>
+                      )}
+                    </Collapsible>
+                  ) : (
+                    <SidebarMenuButton asChild>
+                      <NavLink
+                        to={item.url!}
+                        end={item.url === "/"}
+                        className={({ isActive }) => getNavCls(isActive)}
+                      >
+                        <item.icon className="h-5 w-5" />
+                        {!isCollapsed && <span>{item.title}</span>}
+                      </NavLink>
+                    </SidebarMenuButton>
+                  )}
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
