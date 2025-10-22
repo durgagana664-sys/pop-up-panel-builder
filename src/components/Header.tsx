@@ -19,7 +19,7 @@ export function Header() {
         <div className="flex items-center gap-4">
           <SidebarTrigger className="text-primary-foreground hover:bg-white/10" />
           <h1 className="text-lg md:text-xl font-heading font-semibold text-primary-foreground">
-            Teacher Dashboard
+            Module Dashboard
           </h1>
         </div>
 

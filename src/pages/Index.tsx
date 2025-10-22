@@ -13,7 +13,7 @@ const Index = () => {
     <div className="p-6 space-y-6">
       <Card className="p-6 bg-card shadow-sm">
         <h1 className="text-2xl font-heading font-semibold text-foreground">
-          Welcome Back, Teacher!
+          Welcome Back!
         </h1>
         <p className="text-muted-foreground mt-2">
           You have 3 outstanding tasks and a class starting soon.

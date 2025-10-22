@@ -85,7 +85,7 @@ export function AppSidebar() {
           {!isCollapsed ? (
             <div>
               <h2 className="text-xl font-heading font-semibold text-sidebar-foreground">
-                EMD Education
+                ERP Education
               </h2>
               <p className="text-sm text-sidebar-foreground/70">Portal</p>
             </div>
