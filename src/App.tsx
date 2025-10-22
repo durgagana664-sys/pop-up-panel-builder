@@ -10,6 +10,12 @@ import StaffDownloadStatus from "./pages/StaffDownloadStatus";
 import ParentDownloadStatus from "./pages/ParentDownloadStatus";
 import StudentActivity from "./pages/StudentActivity";
 import ParentActivity from "./pages/ParentActivity";
+import TransportBasics from "./pages/transport/TransportBasics";
+import Vehicles from "./pages/transport/Vehicles";
+import Stops from "./pages/transport/Stops";
+import RoutesPage from "./pages/transport/Routes";
+import VehicleTripMapping from "./pages/transport/VehicleTripMapping";
+import StudentRouteMapping from "./pages/transport/StudentRouteMapping";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -32,7 +38,12 @@ const App = () => (
             <Route path="/download-stats/student-activity" element={<StudentActivity />} />
             <Route path="/download-stats/parent-activity" element={<ParentActivity />} />
             <Route path="/fee-management" element={<Index />} />
-            <Route path="/transport" element={<Index />} />
+            <Route path="/transport/basics" element={<TransportBasics />} />
+            <Route path="/transport/vehicles" element={<Vehicles />} />
+            <Route path="/transport/stops" element={<Stops />} />
+            <Route path="/transport/routes" element={<RoutesPage />} />
+            <Route path="/transport/vehicle-trip-mapping" element={<VehicleTripMapping />} />
+            <Route path="/transport/student-route-mapping" element={<StudentRouteMapping />} />
             <Route path="/id-cards" element={<Index />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />

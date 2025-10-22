@@ -46,7 +46,18 @@ const menuItems = [
     ]
   },
   { title: "Fee Management", url: "/fee-management", icon: DollarSign },
-  { title: "Transport Management", url: "/transport", icon: Bus },
+  { 
+    title: "Transport Management", 
+    icon: Bus,
+    subItems: [
+      { title: "Transport Basics", url: "/transport/basics" },
+      { title: "Vehicles", url: "/transport/vehicles" },
+      { title: "Stops", url: "/transport/stops" },
+      { title: "Routes", url: "/transport/routes" },
+      { title: "Vehicle trip mapping", url: "/transport/vehicle-trip-mapping" },
+      { title: "Student route mapping", url: "/transport/student-route-mapping" },
+    ]
+  },
   { title: "ID Card / Bus Pass", url: "/id-cards", icon: CreditCard },
 ];
 
@@ -56,6 +67,9 @@ export function AppSidebar() {
   const isCollapsed = state === "collapsed";
   const [openDownloadStats, setOpenDownloadStats] = useState(
     location.pathname.startsWith("/download-stats")
+  );
+  const [openTransport, setOpenTransport] = useState(
+    location.pathname.startsWith("/transport")
   );
 
   const getNavCls = (isActive: boolean) =>
@@ -98,67 +112,75 @@ export function AppSidebar() {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              {menuItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  {item.subItems ? (
-                    <Collapsible
-                      open={openDownloadStats}
-                      onOpenChange={setOpenDownloadStats}
-                      className="w-full"
-                    >
-                      <CollapsibleTrigger asChild>
-                        <SidebarMenuButton
-                          className={
-                            location.pathname.startsWith("/download-stats")
-                              ? "bg-sidebar-accent text-sidebar-primary font-semibold"
-                              : "hover:bg-sidebar-accent/50 text-sidebar-foreground"
-                          }
+              {menuItems.map((item) => {
+                const isDownloadStats = item.title === "Download Statistics";
+                const isTransport = item.title === "Transport Management";
+                const isOpen = isDownloadStats ? openDownloadStats : isTransport ? openTransport : false;
+                const setIsOpen = isDownloadStats ? setOpenDownloadStats : isTransport ? setOpenTransport : () => {};
+                const pathPrefix = isDownloadStats ? "/download-stats" : isTransport ? "/transport" : "";
+
+                return (
+                  <SidebarMenuItem key={item.title}>
+                    {item.subItems ? (
+                      <Collapsible
+                        open={isOpen}
+                        onOpenChange={setIsOpen}
+                        className="w-full"
+                      >
+                        <CollapsibleTrigger asChild>
+                          <SidebarMenuButton
+                            className={
+                              location.pathname.startsWith(pathPrefix)
+                                ? "bg-sidebar-accent text-sidebar-primary font-semibold"
+                                : "hover:bg-sidebar-accent/50 text-sidebar-foreground"
+                            }
+                          >
+                            <item.icon className="h-5 w-5" />
+                            {!isCollapsed && (
+                              <>
+                                <span>{item.title}</span>
+                                <ChevronDown
+                                  className={`ml-auto h-4 w-4 transition-transform ${
+                                    isOpen ? "rotate-180" : ""
+                                  }`}
+                                />
+                              </>
+                            )}
+                          </SidebarMenuButton>
+                        </CollapsibleTrigger>
+                        {!isCollapsed && (
+                          <CollapsibleContent>
+                            <div className="ml-6 mt-1 space-y-1 border-l border-sidebar-border/50 pl-3">
+                              {item.subItems.map((subItem) => (
+                                <NavLink
+                                  key={subItem.url}
+                                  to={subItem.url}
+                                  className={({ isActive }) =>
+                                    `block rounded-md px-3 py-2 text-sm ${getNavCls(isActive)}`
+                                  }
+                                >
+                                  {subItem.title}
+                                </NavLink>
+                              ))}
+                            </div>
+                          </CollapsibleContent>
+                        )}
+                      </Collapsible>
+                    ) : (
+                      <SidebarMenuButton asChild>
+                        <NavLink
+                          to={item.url!}
+                          end={item.url === "/"}
+                          className={({ isActive }) => getNavCls(isActive)}
                         >
                           <item.icon className="h-5 w-5" />
-                          {!isCollapsed && (
-                            <>
-                              <span>{item.title}</span>
-                              <ChevronDown
-                                className={`ml-auto h-4 w-4 transition-transform ${
-                                  openDownloadStats ? "rotate-180" : ""
-                                }`}
-                              />
-                            </>
-                          )}
-                        </SidebarMenuButton>
-                      </CollapsibleTrigger>
-                      {!isCollapsed && (
-                        <CollapsibleContent>
-                          <div className="ml-6 mt-1 space-y-1 border-l border-sidebar-border/50 pl-3">
-                            {item.subItems.map((subItem) => (
-                              <NavLink
-                                key={subItem.url}
-                                to={subItem.url}
-                                className={({ isActive }) =>
-                                  `block rounded-md px-3 py-2 text-sm ${getNavCls(isActive)}`
-                                }
-                              >
-                                {subItem.title}
-                              </NavLink>
-                            ))}
-                          </div>
-                        </CollapsibleContent>
-                      )}
-                    </Collapsible>
-                  ) : (
-                    <SidebarMenuButton asChild>
-                      <NavLink
-                        to={item.url!}
-                        end={item.url === "/"}
-                        className={({ isActive }) => getNavCls(isActive)}
-                      >
-                        <item.icon className="h-5 w-5" />
-                        {!isCollapsed && <span>{item.title}</span>}
-                      </NavLink>
-                    </SidebarMenuButton>
-                  )}
-                </SidebarMenuItem>
-              ))}
+                          {!isCollapsed && <span>{item.title}</span>}
+                        </NavLink>
+                      </SidebarMenuButton>
+                    )}
+                  </SidebarMenuItem>
+                );
+              })}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
