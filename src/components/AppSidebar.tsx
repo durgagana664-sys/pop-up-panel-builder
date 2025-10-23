@@ -45,9 +45,24 @@ const menuItems = [
       { title: "Parent Activity", url: "/download-stats/parent-activity" },
     ]
   },
-  { title: "Fee Management", url: "/fee-management", icon: DollarSign },
   { 
-    title: "Transport Management", 
+    title: "Fee Management", 
+    icon: DollarSign,
+    subItems: [
+      { title: "Fee Configuration", url: "/fee/configuration" },
+      { title: "Fee Basics", url: "/fee/basics" },
+      { title: "Class-wise Fee", url: "/fee/class-wise" },
+      { title: "Student-wise Fee", url: "/fee/student-wise" },
+      { title: "Student Class & Fee Schedule Mapper", url: "/fee/schedule-mapper" },
+      { title: "Refund Fee", url: "/fee/refund" },
+      { title: "Fee Receipts", url: "/fee/receipts" },
+      { title: "Pending Cheques", url: "/fee/pending-cheques" },
+      { title: "Fee Invoice", url: "/fee/invoice" },
+      { title: "Fee Reports", url: "/fee/reports" },
+    ]
+  },
+  { 
+    title: "Transport Management",
     icon: Bus,
     subItems: [
       { title: "Transport Basics", url: "/transport/basics" },
@@ -67,6 +82,9 @@ export function AppSidebar() {
   const isCollapsed = state === "collapsed";
   const [openDownloadStats, setOpenDownloadStats] = useState(
     location.pathname.startsWith("/download-stats")
+  );
+  const [openFeeManagement, setOpenFeeManagement] = useState(
+    location.pathname.startsWith("/fee")
   );
   const [openTransport, setOpenTransport] = useState(
     location.pathname.startsWith("/transport")
@@ -114,10 +132,11 @@ export function AppSidebar() {
             <SidebarMenu>
               {menuItems.map((item) => {
                 const isDownloadStats = item.title === "Download Statistics";
+                const isFeeManagement = item.title === "Fee Management";
                 const isTransport = item.title === "Transport Management";
-                const isOpen = isDownloadStats ? openDownloadStats : isTransport ? openTransport : false;
-                const setIsOpen = isDownloadStats ? setOpenDownloadStats : isTransport ? setOpenTransport : () => {};
-                const pathPrefix = isDownloadStats ? "/download-stats" : isTransport ? "/transport" : "";
+                const isOpen = isDownloadStats ? openDownloadStats : isFeeManagement ? openFeeManagement : isTransport ? openTransport : false;
+                const setIsOpen = isDownloadStats ? setOpenDownloadStats : isFeeManagement ? setOpenFeeManagement : isTransport ? setOpenTransport : () => {};
+                const pathPrefix = isDownloadStats ? "/download-stats" : isFeeManagement ? "/fee" : isTransport ? "/transport" : "";
 
                 return (
                   <SidebarMenuItem key={item.title}>

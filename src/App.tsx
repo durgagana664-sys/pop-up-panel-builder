@@ -16,6 +16,16 @@ import Stops from "./pages/transport/Stops";
 import RoutesPage from "./pages/transport/Routes";
 import VehicleTripMapping from "./pages/transport/VehicleTripMapping";
 import StudentRouteMapping from "./pages/transport/StudentRouteMapping";
+import FeeConfiguration from "./pages/fee/FeeConfiguration";
+import FeeBasics from "./pages/fee/FeeBasics";
+import ClasswiseFee from "./pages/fee/ClasswiseFee";
+import StudentwiseFee from "./pages/fee/StudentwiseFee";
+import ScheduleMapper from "./pages/fee/ScheduleMapper";
+import RefundFee from "./pages/fee/RefundFee";
+import FeeReceipts from "./pages/fee/FeeReceipts";
+import PendingCheques from "./pages/fee/PendingCheques";
+import FeeInvoice from "./pages/fee/FeeInvoice";
+import FeeReports from "./pages/fee/FeeReports";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -44,6 +54,16 @@ const App = () => (
             <Route path="/transport/routes" element={<RoutesPage />} />
             <Route path="/transport/vehicle-trip-mapping" element={<VehicleTripMapping />} />
             <Route path="/transport/student-route-mapping" element={<StudentRouteMapping />} />
+            <Route path="/fee/configuration" element={<FeeConfiguration />} />
+            <Route path="/fee/basics" element={<FeeBasics />} />
+            <Route path="/fee/class-wise" element={<ClasswiseFee />} />
+            <Route path="/fee/student-wise" element={<StudentwiseFee />} />
+            <Route path="/fee/schedule-mapper" element={<ScheduleMapper />} />
+            <Route path="/fee/refund" element={<RefundFee />} />
+            <Route path="/fee/receipts" element={<FeeReceipts />} />
+            <Route path="/fee/pending-cheques" element={<PendingCheques />} />
+            <Route path="/fee/invoice" element={<FeeInvoice />} />
+            <Route path="/fee/reports" element={<FeeReports />} />
             <Route path="/id-cards" element={<Index />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
