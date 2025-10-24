@@ -52,7 +52,6 @@ const menuItems = [
       { title: "Fee Configuration", url: "/fee/configuration" },
       { title: "Fee Basics", url: "/fee/basics" },
       { title: "Class-wise Fee", url: "/fee/class-wise" },
-          { title: "Fee Tracker", url: "/fee/tracker" },
       { title: "Student-wise Fee", url: "/fee/student-wise" },
       { title: "Student Class & Fee Schedule Mapper", url: "/fee/schedule-mapper" },
       { title: "Refund Fee", url: "/fee/refund" },
