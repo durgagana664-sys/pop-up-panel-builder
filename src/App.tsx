@@ -26,6 +26,7 @@ import FeeReceipts from "./pages/fee/FeeReceipts";
 import PendingCheques from "./pages/fee/PendingCheques";
 import FeeInvoice from "./pages/fee/FeeInvoice";
 import FeeReports from "./pages/fee/FeeReports";
+import FeeTracker from "./pages/fee/FeeTracker";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -59,6 +60,7 @@ const App = () => (
             <Route path="/fee/class-wise" element={<ClasswiseFee />} />
             <Route path="/fee/student-wise" element={<StudentwiseFee />} />
             <Route path="/fee/schedule-mapper" element={<ScheduleMapper />} />
+            <Route path="/fee/tracker" element={<FeeTracker />} />
             <Route path="/fee/refund" element={<RefundFee />} />
             <Route path="/fee/receipts" element={<FeeReceipts />} />
             <Route path="/fee/pending-cheques" element={<PendingCheques />} />
