@@ -1,6 +1,9 @@
+import { Toaster } from "@/components/ui/toaster";
+import { Toaster as Sonner } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { MuiLayout } from "./components/MuiLayout";
+import { Layout } from "./components/Layout";
 import Index from "./pages/Index";
 import StudentDownloadStatus from "./pages/StudentDownloadStatus";
 import StaffDownloadStatus from "./pages/StaffDownloadStatus";
@@ -29,38 +32,42 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <BrowserRouter>
-      <MuiLayout>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/student-activity" element={<StudentActivity />} />
-          <Route path="/parent-activity" element={<ParentActivity />} />
-          <Route path="/download-stats/student" element={<StudentDownloadStatus />} />
-          <Route path="/download-stats/parent" element={<ParentDownloadStatus />} />
-          <Route path="/download-stats/staff" element={<StaffDownloadStatus />} />
-          
-          <Route path="/transport/basics" element={<TransportBasics />} />
-          <Route path="/transport/vehicles" element={<Vehicles />} />
-          <Route path="/transport/routes" element={<RoutesPage />} />
-          <Route path="/transport/stops" element={<Stops />} />
-          <Route path="/transport/vehicle-trip" element={<VehicleTripMapping />} />
-          <Route path="/transport/student-route" element={<StudentRouteMapping />} />
-          
-          <Route path="/fee/configuration" element={<FeeConfiguration />} />
-          <Route path="/fee/basics" element={<FeeBasics />} />
-          <Route path="/fee/class-wise" element={<ClasswiseFee />} />
-          <Route path="/fee/student-wise" element={<StudentwiseFee />} />
-          <Route path="/fee/schedule-mapper" element={<ScheduleMapper />} />
-          <Route path="/fee/refund" element={<RefundFee />} />
-          <Route path="/fee/receipts" element={<FeeReceipts />} />
-          <Route path="/fee/pending-cheques" element={<PendingCheques />} />
-          <Route path="/fee/invoice" element={<FeeInvoice />} />
-          <Route path="/fee/reports" element={<FeeReports />} />
-          
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </MuiLayout>
-    </BrowserRouter>
+    <TooltipProvider>
+      <Toaster />
+      <Sonner />
+      <BrowserRouter>
+        <Layout>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/student-activity" element={<StudentActivity />} />
+            <Route path="/parent-activity" element={<ParentActivity />} />
+            <Route path="/download-stats/student" element={<StudentDownloadStatus />} />
+            <Route path="/download-stats/parent" element={<ParentDownloadStatus />} />
+            <Route path="/download-stats/staff" element={<StaffDownloadStatus />} />
+            
+            <Route path="/transport/basics" element={<TransportBasics />} />
+            <Route path="/transport/vehicles" element={<Vehicles />} />
+            <Route path="/transport/routes" element={<RoutesPage />} />
+            <Route path="/transport/stops" element={<Stops />} />
+            <Route path="/transport/vehicle-trip" element={<VehicleTripMapping />} />
+            <Route path="/transport/student-route" element={<StudentRouteMapping />} />
+            
+            <Route path="/fee/configuration" element={<FeeConfiguration />} />
+            <Route path="/fee/basics" element={<FeeBasics />} />
+            <Route path="/fee/class-wise" element={<ClasswiseFee />} />
+            <Route path="/fee/student-wise" element={<StudentwiseFee />} />
+            <Route path="/fee/schedule-mapper" element={<ScheduleMapper />} />
+            <Route path="/fee/refund" element={<RefundFee />} />
+            <Route path="/fee/receipts" element={<FeeReceipts />} />
+            <Route path="/fee/pending-cheques" element={<PendingCheques />} />
+            <Route path="/fee/invoice" element={<FeeInvoice />} />
+            <Route path="/fee/reports" element={<FeeReports />} />
+            
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Layout>
+      </BrowserRouter>
+    </TooltipProvider>
   </QueryClientProvider>
 );
 
