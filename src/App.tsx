@@ -27,6 +27,12 @@ import PendingCheques from "./pages/fee/PendingCheques";
 import FeeInvoice from "./pages/fee/FeeInvoice";
 import FeeReports from "./pages/fee/FeeReports";
 import NotFound from "./pages/NotFound";
+import AddStaff from "./pages/staff/AddStaff";
+import BulkPhotoUpload from "./pages/staff/BulkPhotoUpload";
+import BulkStaffImport from "./pages/staff/BulkStaffImport";
+import StaffDirectory from "./pages/staff/StaffDirectory";
+import StaffAttendance from "./pages/staff/StaffAttendance";
+import StaffMarkBulkAttendance from "./pages/staff/StaffMarkBulkAttendance";
 
 const queryClient = new QueryClient();
 
@@ -39,6 +45,13 @@ const App = () => (
         <Layout>
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/staff/addstaff" element={<AddStaff/>} />
+            <Route path="/staff/bulkphotoupload" element={<BulkPhotoUpload />} />
+            <Route path="/staff/bulkstaffimport" element={<BulkStaffImport />} />
+            <Route path="/staff/staffdirectory" element={<StaffDirectory />} />
+            <Route path="/staff/staffattendance" element={<StaffAttendance />} />
+            <Route path="/staff/markbulkattendance" element={<StaffMarkBulkAttendance />} />
+
             <Route path="/student-activity" element={<StudentActivity />} />
             <Route path="/parent-activity" element={<ParentActivity />} />
             <Route path="/download-stats/student" element={<StudentDownloadStatus />} />

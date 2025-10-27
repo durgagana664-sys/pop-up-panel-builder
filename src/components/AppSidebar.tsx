@@ -12,6 +12,7 @@ import {
   CreditCard,
   Search,
   ChevronDown,
+  UserCog,
 } from "lucide-react";
 import {
   Sidebar,
@@ -34,19 +35,31 @@ const menuItems = [
   { title: "Assignment", url: "/assignment", icon: ClipboardList },
   { title: "Time Table", url: "/timetable", icon: Calendar },
   { title: "Student Management", url: "/students", icon: Users },
-  { 
-    title: "Download Statistics", 
+  {
+    title: "Staff Management",
+    icon: UserCog,
+    subItems: [
+      { title: "Staff Directory", url: "/staff/staffdirectory" },
+      { title: "Add Staff", url: "/staff/addstaff" },
+      { title: "Bulk Staff Import", url: "/staff/bulkstaffimport" },
+      { title: "Bulk Photo Upload", url: "/staff/bulkphotoupload" },
+      { title: "Staff Attendance", url: "/staff/staffattendance" },
+      { title: "Mark Bulk Attendance", url: "/staff/markbulkattendance" },
+    ],
+  },
+  {
+    title: "Download Statistics",
     icon: Download,
     subItems: [
       { title: "Student Download Status", url: "/download-stats/student" },
       { title: "Staff Download Status", url: "/download-stats/staff" },
       { title: "Parent Download Status", url: "/download-stats/parent" },
-      { title: "Student Activity", url: "/download-stats/student-activity" },
-      { title: "Parent Activity", url: "/download-stats/parent-activity" },
-    ]
+      { title: "Student Activity", url: "/student-activity" },
+      { title: "Parent Activity", url: "/parent-activity" },
+    ],
   },
-  { 
-    title: "Fee Management", 
+  {
+    title: "Fee Management",
     icon: DollarSign,
     subItems: [
       { title: "Fee Configuration", url: "/fee/configuration" },
@@ -59,9 +72,9 @@ const menuItems = [
       { title: "Pending Cheques", url: "/fee/pending-cheques" },
       { title: "Fee Invoice", url: "/fee/invoice" },
       { title: "Fee Reports", url: "/fee/reports" },
-    ]
+    ],
   },
-  { 
+  {
     title: "Transport Management",
     icon: Bus,
     subItems: [
@@ -69,9 +82,9 @@ const menuItems = [
       { title: "Vehicles", url: "/transport/vehicles" },
       { title: "Stops", url: "/transport/stops" },
       { title: "Routes", url: "/transport/routes" },
-      { title: "Vehicle trip mapping", url: "/transport/vehicle-trip-mapping" },
-      { title: "Student route mapping", url: "/transport/student-route-mapping" },
-    ]
+      { title: "Vehicle trip mapping", url: "/transport/vehicle-trip" }, // ✅ FIXED
+      { title: "Student route mapping", url: "/transport/student-route" }, // ✅ FIXED
+    ],
   },
   { title: "ID Card / Bus Pass", url: "/id-cards", icon: CreditCard },
 ];
@@ -80,6 +93,11 @@ export function AppSidebar() {
   const { state } = useSidebar();
   const location = useLocation();
   const isCollapsed = state === "collapsed";
+
+  // State for all collapsible sections
+  const [openStaffManagement, setOpenStaffManagement] = useState(
+    location.pathname.startsWith("/staff")
+  );
   const [openDownloadStats, setOpenDownloadStats] = useState(
     location.pathname.startsWith("/download-stats")
   );
@@ -96,65 +114,80 @@ export function AppSidebar() {
       : "hover:bg-sidebar-accent/50 text-sidebar-foreground";
 
   return (
-    <Sidebar collapsible="icon" className="border-r border-sidebar-border">
-      <SidebarContent className="bg-sidebar">
-        {/* Logo/Brand Section */}
-        <div className="p-4 border-b border-sidebar-border">
-          {!isCollapsed ? (
-            <div>
-              <h2 className="text-xl font-heading font-semibold text-sidebar-foreground">
-                ERP Education
-              </h2>
-              <p className="text-sm text-sidebar-foreground/70">Portal</p>
-            </div>
-          ) : (
-            <div className="text-center text-sidebar-foreground font-bold text-xl">E</div>
-          )}
-        </div>
-
-        {/* Search Bar */}
-        {!isCollapsed && (
-          <div className="px-3 py-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-sidebar-foreground/50" />
-              <input
-                type="text"
-                placeholder="Search..."
-                className="w-full rounded-lg bg-sidebar-accent/30 py-2 pl-9 pr-3 text-sm text-sidebar-foreground placeholder:text-sidebar-foreground/50 border border-sidebar-border/50 focus:outline-none focus:ring-2 focus:ring-sidebar-primary"
-              />
-            </div>
-          </div>
-        )}
-
-        {/* Navigation Menu */}
+    <Sidebar>
+      <SidebarContent>
         <SidebarGroup>
+          {/* Logo/Brand Section */}
+          <div className="px-4 py-3">
+            {!isCollapsed ? (
+              <div className="text-lg font-bold text-sidebar-primary">
+                <div>ERP Education</div>
+                <div className="text-xs font-normal text-sidebar-foreground/70">Portal</div>
+              </div>
+            ) : (
+              <div className="text-lg font-bold text-sidebar-primary">E</div>
+            )}
+          </div>
+
+          {/* Search Bar */}
+          {!isCollapsed && (
+            <div className="px-4 pb-2">
+              <div className="relative">
+                <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+                <input
+                  placeholder="Search..."
+                  className="w-full rounded-md border border-input bg-background px-8 py-2 text-sm"
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Navigation Menu */}
           <SidebarGroupContent>
             <SidebarMenu>
               {menuItems.map((item) => {
+                const isStaffManagement = item.title === "Staff Management";
                 const isDownloadStats = item.title === "Download Statistics";
                 const isFeeManagement = item.title === "Fee Management";
                 const isTransport = item.title === "Transport Management";
-                const isOpen = isDownloadStats ? openDownloadStats : isFeeManagement ? openFeeManagement : isTransport ? openTransport : false;
-                const setIsOpen = isDownloadStats ? setOpenDownloadStats : isFeeManagement ? setOpenFeeManagement : isTransport ? setOpenTransport : () => {};
-                const pathPrefix = isDownloadStats ? "/download-stats" : isFeeManagement ? "/fee" : isTransport ? "/transport" : "";
+
+                const isOpen = isStaffManagement
+                  ? openStaffManagement
+                  : isDownloadStats
+                  ? openDownloadStats
+                  : isFeeManagement
+                  ? openFeeManagement
+                  : isTransport
+                  ? openTransport
+                  : false;
+
+                const setIsOpen = isStaffManagement
+                  ? setOpenStaffManagement
+                  : isDownloadStats
+                  ? setOpenDownloadStats
+                  : isFeeManagement
+                  ? setOpenFeeManagement
+                  : isTransport
+                  ? setOpenTransport
+                  : () => {};
+
+                const pathPrefix = isStaffManagement
+                  ? "/staff"
+                  : isDownloadStats
+                  ? "/download-stats"
+                  : isFeeManagement
+                  ? "/fee"
+                  : isTransport
+                  ? "/transport"
+                  : "";
 
                 return (
                   <SidebarMenuItem key={item.title}>
                     {item.subItems ? (
-                      <Collapsible
-                        open={isOpen}
-                        onOpenChange={setIsOpen}
-                        className="w-full"
-                      >
+                      <Collapsible open={isOpen} onOpenChange={setIsOpen}>
                         <CollapsibleTrigger asChild>
-                          <SidebarMenuButton
-                            className={
-                              location.pathname.startsWith(pathPrefix)
-                                ? "bg-sidebar-accent text-sidebar-primary font-semibold"
-                                : "hover:bg-sidebar-accent/50 text-sidebar-foreground"
-                            }
-                          >
-                            <item.icon className="h-5 w-5" />
+                          <SidebarMenuButton>
+                            <item.icon className="h-4 w-4" />
                             {!isCollapsed && (
                               <>
                                 <span>{item.title}</span>
@@ -168,53 +201,49 @@ export function AppSidebar() {
                           </SidebarMenuButton>
                         </CollapsibleTrigger>
                         {!isCollapsed && (
-                          <CollapsibleContent>
-                            <div className="ml-6 mt-1 space-y-1 border-l border-sidebar-border/50 pl-3">
-                              {item.subItems.map((subItem) => (
-                                <NavLink
-                                  key={subItem.url}
-                                  to={subItem.url}
-                                  className={({ isActive }) =>
-                                    `block rounded-md px-3 py-2 text-sm ${getNavCls(isActive)}`
-                                  }
-                                >
-                                  {subItem.title}
-                                </NavLink>
-                              ))}
-                            </div>
+                          <CollapsibleContent className="pl-6">
+                            {item.subItems.map((subItem) => (
+                              <NavLink
+                                key={subItem.url}
+                                to={subItem.url}
+                                className={({ isActive }) =>
+                                  `block rounded-md px-3 py-2 text-sm ${getNavCls(isActive)}`
+                                }
+                              >
+                                {subItem.title}
+                              </NavLink>
+                            ))}
                           </CollapsibleContent>
                         )}
                       </Collapsible>
                     ) : (
-                      <SidebarMenuButton asChild>
-                        <NavLink
-                          to={item.url!}
-                          end={item.url === "/"}
-                          className={({ isActive }) => getNavCls(isActive)}
-                        >
-                          <item.icon className="h-5 w-5" />
-                          {!isCollapsed && <span>{item.title}</span>}
-                        </NavLink>
-                      </SidebarMenuButton>
+                      <NavLink to={item.url!}>
+                        {({ isActive }) => (
+                          <SidebarMenuButton className={getNavCls(isActive)}>
+                            <item.icon className="h-4 w-4" />
+                            {!isCollapsed && <span>{item.title}</span>}
+                          </SidebarMenuButton>
+                        )}
+                      </NavLink>
                     )}
                   </SidebarMenuItem>
                 );
               })}
             </SidebarMenu>
           </SidebarGroupContent>
-        </SidebarGroup>
 
-        {/* Footer branding */}
-        {!isCollapsed && (
-          <div className="mt-auto p-4 border-t border-sidebar-border">
-            <div className="flex items-center gap-2">
-              <div className="h-8 w-8 rounded-full bg-sidebar-primary flex items-center justify-center text-sidebar-primary-foreground font-bold text-sm">
-                ET
+          {/* Footer branding */}
+          {!isCollapsed && (
+            <div className="mt-auto px-4 py-3 text-xs text-sidebar-foreground/70">
+              <div className="flex items-center gap-2">
+                <div className="flex h-8 w-8 items-center justify-center rounded bg-sidebar-primary text-sidebar-primary-foreground font-bold">
+                  ET
+                </div>
+                <span>eduTinker</span>
               </div>
-              <div className="text-xs text-sidebar-foreground/70">eduTinker</div>
             </div>
-          </div>
-        )}
+          )}
+        </SidebarGroup>
       </SidebarContent>
     </Sidebar>
   );
