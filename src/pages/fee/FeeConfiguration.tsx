@@ -4,7 +4,7 @@ import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
+import { GripVertical } from "lucide-react";
 
 export default function FeeConfiguration() {
   return (
@@ -164,12 +164,53 @@ export default function FeeConfiguration() {
         <h2 className="text-lg font-semibold text-foreground mb-4">Parent Side Configuration on App</h2>
         <div className="space-y-3">
           {[
-            { id: "component-selection", label: "Allow component selection", checked: false },
-            { id: "fine-selection", label: "Allow fee fine to be selection", checked: false },
-            { id: "disallow-partial", label: "Disallow partial payment", checked: false },
-            { id: "hide-components", label: "Hide components when student is paying the fee from app", checked: false },
-            { id: "wallet-addition", label: "Allow parent side wallet amount addition", checked: false },
-            { id: "current-installment", label: "Show only current installment", checked: false },
+            { id: "partial-payment", label: "Don't allow student/ parent to do partial payment of component", checked: false },
+            { id: "hide-components-app", label: "Do not show components when student is paying the fee from app", checked: false },
+            { id: "wallet-addition", label: "Allow parent side wallet amount addition", checked: true },
+            { id: "show-current", label: "Show only current installment", checked: false },
+          ].map((item) => (
+            <div key={item.id} className="flex items-center gap-3">
+              <Switch defaultChecked={item.checked} id={item.id} />
+              <Label htmlFor={item.id} className="cursor-pointer">{item.label}</Label>
+            </div>
+          ))}
+        </div>
+      </Card>
+
+      {/* Show students basic details on receipt */}
+      <Card className="p-6">
+        <h2 className="text-lg font-semibold text-foreground mb-4">Show students basic details on receipt</h2>
+        <div className="space-y-3">
+          {[
+            { id: "receipt-date", label: "Receipt Date" },
+            { id: "session", label: "Session" },
+            { id: "receipt-no", label: "Receipt No." },
+            { id: "student-name", label: "Student Name" },
+            { id: "admission-no", label: "Admission No.", checked: true },
+            { id: "class", label: "Class", checked: true },
+            { id: "father-name", label: "Father Name", checked: true },
+            { id: "mother-name", label: "Mother Name", checked: false },
+            { id: "address", label: "Address", checked: true },
+            { id: "father-phone", label: "Father Phone", checked: true },
+            { id: "mother-phone", label: "Mother Phone", checked: false },
+          ].map((item) => (
+            <div key={item.id} className="flex items-center gap-3">
+              <GripVertical className="h-4 w-4 text-muted-foreground" />
+              <Switch defaultChecked={item.checked ?? false} id={item.id} />
+              <Label htmlFor={item.id} className="cursor-pointer">{item.label}</Label>
+            </div>
+          ))}
+        </div>
+      </Card>
+
+      {/* Show other Institute fields */}
+      <Card className="p-6">
+        <h2 className="text-lg font-semibold text-foreground mb-4">Show other Institute fields</h2>
+        <div className="space-y-3">
+          {[
+            { id: "affiliation", label: "Affiliation No.", checked: true },
+            { id: "school-url", label: "School Url", checked: true },
+            { id: "board-logo", label: "Board Logo", checked: true },
           ].map((item) => (
             <div key={item.id} className="flex items-center gap-3">
               <Switch defaultChecked={item.checked} id={item.id} />

@@ -1,6 +1,44 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Download, RefreshCw } from "lucide-react";
+
+const invoiceData = [
+  {
+    id: 1,
+    invoiceName: "Invoice Neeraj",
+    studentName: "Neeraj",
+    studentAvatar: null,
+    classSection: "1st-A",
+    generatedOn: "25/10/2025",
+  },
+  {
+    id: 2,
+    invoiceName: "Class-1",
+    studentName: "",
+    studentAvatar: null,
+    classSection: "1st-A",
+    generatedOn: "12/08/2025",
+  },
+  {
+    id: 3,
+    invoiceName: "Dummy 2",
+    studentName: "NEHA",
+    studentAvatar: "/placeholder.svg",
+    classSection: "3rd-A",
+    generatedOn: "09/05/2025",
+  },
+  {
+    id: 4,
+    invoiceName: "Dummy",
+    studentName: "YUVRAJ",
+    studentAvatar: null,
+    classSection: "8th-A",
+    generatedOn: "09/05/2025",
+  },
+];
 
 export default function FeeInvoice() {
   return (
@@ -8,14 +46,15 @@ export default function FeeInvoice() {
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-heading font-semibold text-foreground">
           Fee Invoice
+          <span className="text-sm text-muted-foreground ml-2">Generate Invoice</span>
         </h1>
-        <Button>Generate Invoice</Button>
       </div>
 
       {/* Filters */}
       <Card className="p-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
+            <label className="text-sm font-medium mb-2 block">Academic Year *</label>
             <Select defaultValue="2025">
               <SelectTrigger>
                 <SelectValue />
@@ -27,22 +66,24 @@ export default function FeeInvoice() {
             </Select>
           </div>
           <div>
+            <label className="text-sm font-medium mb-2 block">Select Class</label>
             <Select>
               <SelectTrigger>
-                <SelectValue placeholder="Select Class" />
+                <SelectValue placeholder="All" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Classes</SelectItem>
+                <SelectItem value="1st">1st</SelectItem>
                 <SelectItem value="3rd">3rd</SelectItem>
-                <SelectItem value="4th">4th</SelectItem>
-                <SelectItem value="5th">5th</SelectItem>
+                <SelectItem value="8th">8th</SelectItem>
               </SelectContent>
             </Select>
           </div>
           <div>
+            <label className="text-sm font-medium mb-2 block">Select Section</label>
             <Select>
               <SelectTrigger>
-                <SelectValue placeholder="Select Section" />
+                <SelectValue placeholder="All" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Sections</SelectItem>
@@ -54,18 +95,68 @@ export default function FeeInvoice() {
         </div>
       </Card>
 
-      {/* Empty State */}
-      <Card className="p-12">
-        <div className="text-center space-y-4">
-          <div className="text-6xl opacity-20">📄</div>
-          <h2 className="text-xl font-semibold text-foreground">No Invoices Generated</h2>
-          <p className="text-muted-foreground">
-            No fee invoices have been generated yet. Click "Generate Invoice" to create one.
-          </p>
-          <div className="pt-4">
-            <Button size="lg">Generate Your First Invoice</Button>
-          </div>
-        </div>
+      {/* Action Buttons */}
+      <div className="flex justify-end gap-2">
+        <Button variant="outline" size="lg">
+          + GENERATE
+        </Button>
+        <Button variant="outline" size="icon">
+          <RefreshCw className="h-4 w-4" />
+        </Button>
+      </div>
+
+      {/* Invoice Table */}
+      <Card className="p-6">
+        <Table>
+          <TableHeader>
+            <TableRow className="bg-[#0f4c5c] hover:bg-[#0f4c5c]">
+              <TableHead className="text-white">Invoice Name</TableHead>
+              <TableHead className="text-white">Student Name</TableHead>
+              <TableHead className="text-white">Class & Section</TableHead>
+              <TableHead className="text-white">Generated on</TableHead>
+              <TableHead className="text-white">Send to Students</TableHead>
+              <TableHead className="text-white">Action</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {invoiceData.map((invoice) => (
+              <TableRow key={invoice.id}>
+                <TableCell>
+                  <span className="text-muted-foreground text-sm mr-2">0{invoice.id}.</span>
+                  {invoice.invoiceName}
+                </TableCell>
+                <TableCell>
+                  {invoice.studentName && (
+                    <div className="flex items-center gap-2">
+                      <Avatar className="h-8 w-8">
+                        <AvatarImage src={invoice.studentAvatar || undefined} />
+                        <AvatarFallback>{invoice.studentName[0]}</AvatarFallback>
+                      </Avatar>
+                      <span>{invoice.studentName}</span>
+                    </div>
+                  )}
+                </TableCell>
+                <TableCell>{invoice.classSection}</TableCell>
+                <TableCell>{invoice.generatedOn}</TableCell>
+                <TableCell>
+                  <Button variant="outline" className="text-orange-500 border-orange-500">
+                    SEND TO STUDENTS ▶
+                  </Button>
+                </TableCell>
+                <TableCell>
+                  <div className="flex gap-2">
+                    <Button variant="ghost" size="icon">
+                      <Download className="h-4 w-4 text-orange-500" />
+                    </Button>
+                    <Button variant="ghost" size="icon">
+                      <RefreshCw className="h-4 w-4 text-orange-500" />
+                    </Button>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       </Card>
     </div>
   );

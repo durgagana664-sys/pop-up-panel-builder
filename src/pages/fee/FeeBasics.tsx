@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
+import { Switch } from "@/components/ui/switch";
 import { Pencil } from "lucide-react";
 
 export default function FeeBasics() {
@@ -140,34 +141,240 @@ export default function FeeBasics() {
       {/* Fee Discount */}
       <Card className="p-6">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-semibold text-foreground">3. Fee Discount</h2>
-          <Button>Add Discount</Button>
+          <h2 className="text-lg font-semibold text-foreground">3. Fee Discounts</h2>
+          <div className="flex gap-2">
+            <Button variant="outline">ADD FEE DISCOUNTS</Button>
+            <Button variant="outline">SHOW LOGS</Button>
+          </div>
         </div>
-        <div className="text-sm text-muted-foreground text-center py-8">
-          No discounts created yet. Click "Add Discount" to create one.
-        </div>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Discount name</TableHead>
+              <TableHead>Remarks</TableHead>
+              <TableHead>Action</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            <TableRow>
+              <TableCell className="font-medium">Staff Discount</TableCell>
+              <TableCell></TableCell>
+              <TableCell>
+                <div className="flex gap-2">
+                  <Button variant="ghost" size="icon">
+                    <Pencil className="h-4 w-4 text-orange-500" />
+                  </Button>
+                  <Button variant="ghost" size="icon" className="text-orange-500">
+                    🗑️
+                  </Button>
+                </div>
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className="font-medium">New Student</TableCell>
+              <TableCell></TableCell>
+              <TableCell>
+                <div className="flex gap-2">
+                  <Button variant="ghost" size="icon">
+                    <Pencil className="h-4 w-4 text-orange-500" />
+                  </Button>
+                  <Button variant="ghost" size="icon" className="text-orange-500">
+                    🗑️
+                  </Button>
+                </div>
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className="font-medium">New student</TableCell>
+              <TableCell></TableCell>
+              <TableCell>
+                <div className="flex gap-2">
+                  <Button variant="ghost" size="icon">
+                    <Pencil className="h-4 w-4 text-orange-500" />
+                  </Button>
+                  <Button variant="ghost" size="icon" className="text-orange-500">
+                    🗑️
+                  </Button>
+                </div>
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className="font-medium">Siblings Discount</TableCell>
+              <TableCell></TableCell>
+              <TableCell>
+                <div className="flex gap-2">
+                  <Button variant="ghost" size="icon">
+                    <Pencil className="h-4 w-4 text-orange-500" />
+                  </Button>
+                  <Button variant="ghost" size="icon" className="text-orange-500">
+                    🗑️
+                  </Button>
+                </div>
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
       </Card>
 
       {/* Miscellaneous Fee */}
       <Card className="p-6">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-semibold text-foreground">4. Miscellaneous Fee</h2>
-          <Button>Add Miscellaneous Fee</Button>
+          <h2 className="text-lg font-semibold text-foreground">4. Misc. Fee</h2>
+          <div className="flex gap-2">
+            <Button variant="outline">ADD MISC. FEE</Button>
+            <Button variant="outline">SHOW LOGS</Button>
+          </div>
         </div>
-        <div className="text-sm text-muted-foreground text-center py-8">
-          No miscellaneous fees created yet.
-        </div>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Head Name</TableHead>
+              <TableHead>Misc. Fee Name</TableHead>
+              <TableHead>Action</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            <TableRow>
+              <TableCell className="font-medium">School Fees</TableCell>
+              <TableCell>TC Fee</TableCell>
+              <TableCell>
+                <div className="flex gap-2">
+                  <Button variant="ghost" size="icon">
+                    <Pencil className="h-4 w-4 text-orange-500" />
+                  </Button>
+                  <Button variant="ghost" size="icon" className="text-orange-500">
+                    🗑️
+                  </Button>
+                </div>
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell></TableCell>
+              <TableCell>Extra class charges</TableCell>
+              <TableCell>
+                <div className="flex gap-2">
+                  <Button variant="ghost" size="icon">
+                    <Pencil className="h-4 w-4 text-orange-500" />
+                  </Button>
+                  <Button variant="ghost" size="icon" className="text-orange-500">
+                    🗑️
+                  </Button>
+                </div>
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell></TableCell>
+              <TableCell>Parking Fee</TableCell>
+              <TableCell>
+                <div className="flex gap-2">
+                  <Button variant="ghost" size="icon">
+                    <Pencil className="h-4 w-4 text-orange-500" />
+                  </Button>
+                  <Button variant="ghost" size="icon" className="text-orange-500">
+                    🗑️
+                  </Button>
+                </div>
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell></TableCell>
+              <TableCell>Quilt charges</TableCell>
+              <TableCell>
+                <div className="flex gap-2">
+                  <Button variant="ghost" size="icon">
+                    <Pencil className="h-4 w-4 text-orange-500" />
+                  </Button>
+                  <Button variant="ghost" size="icon" className="text-orange-500">
+                    🗑️
+                  </Button>
+                </div>
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
       </Card>
 
       {/* Fee Fine */}
       <Card className="p-6">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-semibold text-foreground">5. Fee Fine</h2>
-          <Button>Add Fee Fine</Button>
+          <h2 className="text-lg font-semibold text-foreground">5. Fee fine</h2>
+          <div className="flex gap-2">
+            <Button variant="outline">ADD FEE FINE</Button>
+            <Button variant="outline">SHOW LOGS</Button>
+          </div>
         </div>
-        <div className="text-sm text-muted-foreground text-center py-8">
-          No fee fines configured yet.
-        </div>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Fine name</TableHead>
+              <TableHead>Fine Type</TableHead>
+              <TableHead>Fine Status</TableHead>
+              <TableHead>Action</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            <TableRow>
+              <TableCell className="font-medium">Fine</TableCell>
+              <TableCell>Fixed Amount</TableCell>
+              <TableCell>
+                <Switch defaultChecked={false} />
+              </TableCell>
+              <TableCell>
+                <Button variant="ghost" size="icon">
+                  <Pencil className="h-4 w-4 text-orange-500" />
+                </Button>
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className="font-medium">Fine 2</TableCell>
+              <TableCell>Fixed Amount</TableCell>
+              <TableCell>
+                <Switch defaultChecked={false} />
+              </TableCell>
+              <TableCell>
+                <Button variant="ghost" size="icon">
+                  <Pencil className="h-4 w-4 text-orange-500" />
+                </Button>
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className="font-medium">Late Fee</TableCell>
+              <TableCell>Fixed Amount</TableCell>
+              <TableCell>
+                <Switch defaultChecked={true} />
+              </TableCell>
+              <TableCell>
+                <Button variant="ghost" size="icon">
+                  <Pencil className="h-4 w-4 text-orange-500" />
+                </Button>
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className="font-medium">Late Fee fine</TableCell>
+              <TableCell>Day-wise Amount</TableCell>
+              <TableCell>
+                <Switch defaultChecked={true} />
+              </TableCell>
+              <TableCell>
+                <Button variant="ghost" size="icon">
+                  <Pencil className="h-4 w-4 text-orange-500" />
+                </Button>
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className="font-medium">Late Fine</TableCell>
+              <TableCell>Slab-wise Amount</TableCell>
+              <TableCell>
+                <Switch defaultChecked={true} />
+              </TableCell>
+              <TableCell>
+                <Button variant="ghost" size="icon">
+                  <Pencil className="h-4 w-4 text-orange-500" />
+                </Button>
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
       </Card>
     </div>
   );
