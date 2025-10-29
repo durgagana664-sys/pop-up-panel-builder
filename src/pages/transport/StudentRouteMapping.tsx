@@ -74,9 +74,9 @@ export default function StudentRouteMapping() {
     },
   ]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedVehicle, setSelectedVehicle] = useState("");
-  const [selectedRoute, setSelectedRoute] = useState("");
-  const [selectedStop, setSelectedStop] = useState("");
+  const [selectedVehicle, setSelectedVehicle] = useState("all");
+  const [selectedRoute, setSelectedRoute] = useState("all");
+  const [selectedStop, setSelectedStop] = useState("all");
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [newStudent, setNewStudent] = useState({
     name: "",
