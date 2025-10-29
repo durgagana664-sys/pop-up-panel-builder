@@ -1,26 +1,75 @@
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Pencil } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 export default function FeeBasics() {
+  const { toast } = useToast();
+  
+  const [feeSchedules, setFeeSchedules] = useState([
+    { class: "Nursery", installments: 4, name: "Fee schedule", date: "01/04/2025 - 31/12/2025" },
+    { class: "1st, 2nd, 3rd, 4th, 5th, LKG, UKG", installments: 12, name: "Monthly", date: "01/04/2025 - 10/03/2026" },
+    { class: "6th, 7th, 8th, 9th, 10th, 11, 12", installments: 4, name: "Senior wing", date: "01/04/2025 - 10/01/2026" },
+  ]);
+  
+  const [isAddScheduleDialogOpen, setIsAddScheduleDialogOpen] = useState(false);
+  const [newSchedule, setNewSchedule] = useState({
+    class: "",
+    installments: "",
+    name: "",
+    startDate: "",
+    endDate: "",
+  });
+
   const stats = [
-    { label: "No. of Fee schedule created", value: 3, color: "bg-green-500" },
+    { label: "No. of Fee schedule created", value: feeSchedules.length, color: "bg-green-500" },
     { label: "No. of Fee component created", value: 12, color: "bg-red-500" },
     { label: "No. of Fee discounts created", value: 4, color: "bg-orange-500" },
     { label: "No. of Misc Fee created", value: 2, color: "bg-yellow-500" },
     { label: "No. of Fee Fine created", value: 1, color: "bg-gray-500" },
   ];
 
-  const feeSchedules = [
-    { class: "Nursery", installments: 4, name: "Fee schedule", date: "01/04/2025 - 31/12/2025" },
-    { class: "1st, 2nd, 3rd, 4th, 5th, LKG, UKG", installments: 12, name: "Monthly", date: "01/04/2025 - 10/03/2026" },
-    { class: "6th, 7th, 8th, 9th, 10th, 11, 12", installments: 4, name: "Senior wing", date: "01/04/2025 - 10/01/2026" },
-  ];
+  const handleAddSchedule = () => {
+    if (!newSchedule.class || !newSchedule.installments || !newSchedule.name || !newSchedule.startDate || !newSchedule.endDate) {
+      toast({
+        title: "Error",
+        description: "Please fill in all fields",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const formattedDate = `${newSchedule.startDate.split("-").reverse().join("/")} - ${newSchedule.endDate.split("-").reverse().join("/")}`;
+    
+    setFeeSchedules([...feeSchedules, {
+      class: newSchedule.class,
+      installments: parseInt(newSchedule.installments),
+      name: newSchedule.name,
+      date: formattedDate,
+    }]);
+
+    toast({
+      title: "Success",
+      description: "Fee schedule added successfully",
+    });
+
+    setNewSchedule({
+      class: "",
+      installments: "",
+      name: "",
+      startDate: "",
+      endDate: "",
+    });
+    setIsAddScheduleDialogOpen(false);
+  };
 
   const feeComponents = [
     { head: "CU exam fee", component: "Exam Fee", admission: "All Students", gender: "All Students" },
@@ -71,7 +120,7 @@ export default function FeeBasics() {
       <Card className="p-6">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-semibold text-foreground">1. Fee Schedule</h2>
-          <Button>Add Fee Schedule</Button>
+          <Button onClick={() => setIsAddScheduleDialogOpen(true)}>Add Fee Schedule</Button>
         </div>
         <Table>
           <TableHeader>
@@ -376,6 +425,72 @@ export default function FeeBasics() {
           </TableBody>
         </Table>
       </Card>
+
+      {/* Add Fee Schedule Dialog */}
+      <Dialog open={isAddScheduleDialogOpen} onOpenChange={setIsAddScheduleDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add Fee Schedule</DialogTitle>
+            <DialogDescription>
+              Enter the details for the new fee schedule
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="class">Classes</Label>
+              <Input
+                id="class"
+                placeholder="e.g., 1st, 2nd, 3rd"
+                value={newSchedule.class}
+                onChange={(e) => setNewSchedule({ ...newSchedule, class: e.target.value })}
+              />
+            </div>
+            <div>
+              <Label htmlFor="installments">Number of Installments</Label>
+              <Input
+                id="installments"
+                type="number"
+                placeholder="e.g., 12"
+                value={newSchedule.installments}
+                onChange={(e) => setNewSchedule({ ...newSchedule, installments: e.target.value })}
+              />
+            </div>
+            <div>
+              <Label htmlFor="name">Schedule Name</Label>
+              <Input
+                id="name"
+                placeholder="e.g., Monthly"
+                value={newSchedule.name}
+                onChange={(e) => setNewSchedule({ ...newSchedule, name: e.target.value })}
+              />
+            </div>
+            <div>
+              <Label htmlFor="startDate">Start Date</Label>
+              <Input
+                id="startDate"
+                type="date"
+                value={newSchedule.startDate}
+                onChange={(e) => setNewSchedule({ ...newSchedule, startDate: e.target.value })}
+              />
+            </div>
+            <div>
+              <Label htmlFor="endDate">End Date</Label>
+              <Input
+                id="endDate"
+                type="date"
+                value={newSchedule.endDate}
+                onChange={(e) => setNewSchedule({ ...newSchedule, endDate: e.target.value })}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsAddScheduleDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleAddSchedule}>Add Schedule</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
