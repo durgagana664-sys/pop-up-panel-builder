@@ -1,15 +1,50 @@
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Calendar, Navigation, MapPin } from "lucide-react";
-
-const routesData = [
-  { id: "01", name: "Route 1", stops: "2 Stops" },
-  { id: "02", name: "Route 2", stops: "2 Stops" },
-  { id: "03", name: "Route 3", stops: "2 Stops" },
-];
+import { useToast } from "@/hooks/use-toast";
 
 export default function Routes() {
+  const { toast } = useToast();
+  const [routes, setRoutes] = useState([
+    { id: "01", name: "Route 1", stops: "2 Stops" },
+    { id: "02", name: "Route 2", stops: "2 Stops" },
+    { id: "03", name: "Route 3", stops: "2 Stops" },
+  ]);
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [newRoute, setNewRoute] = useState({ name: "", stops: "" });
+
+  const handleAddRoute = () => {
+    if (!newRoute.name || !newRoute.stops) {
+      toast({
+        title: "Error",
+        description: "Please fill in all fields",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const id = String(routes.length + 1).padStart(2, "0");
+    setRoutes([...routes, { id, name: newRoute.name, stops: newRoute.stops }]);
+    setNewRoute({ name: "", stops: "" });
+    setIsAddDialogOpen(false);
+    toast({
+      title: "Success",
+      description: "Route added successfully",
+    });
+  };
+
+  const handleDeleteRoute = (id: string) => {
+    setRoutes(routes.filter((route) => route.id !== id));
+    toast({
+      title: "Success",
+      description: "Route deleted successfully",
+    });
+  };
   return (
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
@@ -26,7 +61,7 @@ export default function Routes() {
               <span>Apr 2025 - Mar 2026</span>
             </div>
           </div>
-          <Button className="bg-primary text-primary-foreground">+ ADD NEW ROUTE</Button>
+          <Button onClick={() => setIsAddDialogOpen(true)} className="bg-primary text-primary-foreground">+ ADD NEW ROUTE</Button>
           <Button variant="outline" className="text-primary border-primary">
             📋 CLONE ROUTE
           </Button>
@@ -38,7 +73,7 @@ export default function Routes() {
         <Card className="bg-blue-500 p-6 text-white">
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-4xl font-bold">3</div>
+              <div className="text-4xl font-bold">{routes.length}</div>
               <div className="text-sm mt-1">Total Routes</div>
             </div>
             <Navigation className="h-12 w-12 opacity-80" />
@@ -47,7 +82,7 @@ export default function Routes() {
         <Card className="bg-orange-500 p-6 text-white">
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-4xl font-bold">6</div>
+              <div className="text-4xl font-bold">{routes.reduce((acc, r) => acc + parseInt(r.stops.split(" ")[0]), 0)}</div>
               <div className="text-sm mt-1">Total Stops</div>
             </div>
             <MapPin className="h-12 w-12 opacity-80" />
@@ -66,7 +101,7 @@ export default function Routes() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {routesData.map((route) => (
+              {routes.map((route) => (
                 <TableRow key={route.id}>
                   <TableCell>
                     <span className="text-muted-foreground mr-2">{route.id}.</span>
@@ -78,7 +113,7 @@ export default function Routes() {
                       <Button size="icon" variant="ghost" className="h-8 w-8 text-primary">
                         <span className="material-icons text-sm">✏️</span>
                       </Button>
-                      <Button size="icon" variant="ghost" className="h-8 w-8 text-destructive">
+                      <Button onClick={() => handleDeleteRoute(route.id)} size="icon" variant="ghost" className="h-8 w-8 text-destructive">
                         <span className="material-icons text-sm">🗑️</span>
                       </Button>
                     </div>
@@ -89,6 +124,40 @@ export default function Routes() {
           </Table>
         </div>
       </Card>
+
+      <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add New Route</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="routeName">Route Name *</Label>
+              <Input
+                id="routeName"
+                placeholder="Enter route name"
+                value={newRoute.name}
+                onChange={(e) => setNewRoute({ ...newRoute, name: e.target.value })}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="stops">Stops (e.g., "3 Stops") *</Label>
+              <Input
+                id="stops"
+                placeholder="Enter stops"
+                value={newRoute.stops}
+                onChange={(e) => setNewRoute({ ...newRoute, stops: e.target.value })}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleAddRoute}>Add Route</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
