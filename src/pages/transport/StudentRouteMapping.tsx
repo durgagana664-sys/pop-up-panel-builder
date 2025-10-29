@@ -93,9 +93,9 @@ export default function StudentRouteMapping() {
       student.admissionId.toLowerCase().includes(searchQuery.toLowerCase()) ||
       student.class.toLowerCase().includes(searchQuery.toLowerCase());
 
-    const matchesVehicle = !selectedVehicle || student.trips.some((trip) => trip.vehicleCode === selectedVehicle);
-    const matchesRoute = !selectedRoute || student.trips.some((trip) => trip.route === selectedRoute);
-    const matchesStop = !selectedStop || student.trips.some((trip) => trip.stopName === selectedStop);
+    const matchesVehicle = !selectedVehicle || selectedVehicle === "all" || student.trips.some((trip) => trip.vehicleCode === selectedVehicle);
+    const matchesRoute = !selectedRoute || selectedRoute === "all" || student.trips.some((trip) => trip.route === selectedRoute);
+    const matchesStop = !selectedStop || selectedStop === "all" || student.trips.some((trip) => trip.stopName === selectedStop);
 
     return matchesSearch && matchesVehicle && matchesRoute && matchesStop;
   });
@@ -164,7 +164,7 @@ export default function StudentRouteMapping() {
               <SelectValue placeholder="Select" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All Vehicles</SelectItem>
+              <SelectItem value="all">All Vehicles</SelectItem>
               <SelectItem value="199888">199888</SelectItem>
               <SelectItem value="199991">199991</SelectItem>
             </SelectContent>
@@ -178,7 +178,7 @@ export default function StudentRouteMapping() {
               <SelectValue placeholder="Select" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All Routes</SelectItem>
+              <SelectItem value="all">All Routes</SelectItem>
               <SelectItem value="Route 1">Route 1</SelectItem>
               <SelectItem value="eduTinker Public School">eduTinker Public School</SelectItem>
             </SelectContent>
@@ -192,7 +192,7 @@ export default function StudentRouteMapping() {
               <SelectValue placeholder="Select" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All Stops</SelectItem>
+              <SelectItem value="all">All Stops</SelectItem>
               <SelectItem value="Route A">Route A</SelectItem>
               <SelectItem value="Stop 1">Stop 1</SelectItem>
             </SelectContent>
