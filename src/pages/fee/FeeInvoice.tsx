@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -41,6 +42,24 @@ const invoiceData = [
 ];
 
 export default function FeeInvoice() {
+  // State for filters
+  const [academicYear, setAcademicYear] = useState("2025");
+  const [selectedClass, setSelectedClass] = useState("all");
+  const [selectedSection, setSelectedSection] = useState("all");
+
+  // Filter invoiceData based on filter state
+  const filteredInvoices = invoiceData.filter((invoice) => {
+    const academicYearMatch = academicYear === "all" || invoice.generatedOn.includes(academicYear);
+    const classMatch =
+      selectedClass === "all" ||
+      (invoice.classSection && invoice.classSection.toLowerCase().startsWith(selectedClass.toLowerCase()));
+    const sectionMatch =
+      selectedSection === "all" ||
+      (invoice.classSection && invoice.classSection.toLowerCase().endsWith(selectedSection.toLowerCase()));
+
+    return academicYearMatch && classMatch && sectionMatch;
+  });
+
   return (
     <div className="p-6 space-y-6">
       <div className="flex justify-between items-center">
@@ -55,11 +74,12 @@ export default function FeeInvoice() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <label className="text-sm font-medium mb-2 block">Academic Year *</label>
-            <Select defaultValue="2025">
+            <Select value={academicYear} onValueChange={setAcademicYear}>
               <SelectTrigger>
-                <SelectValue />
+                <SelectValue>{academicYear === "all" ? "All Academic Years" : academicYear}</SelectValue>
               </SelectTrigger>
               <SelectContent>
+                <SelectItem value="all">All Academic Years</SelectItem>
                 <SelectItem value="2025">Apr 2025 - Mar 2026</SelectItem>
                 <SelectItem value="2024">Apr 2024 - Mar 2025</SelectItem>
               </SelectContent>
@@ -67,9 +87,9 @@ export default function FeeInvoice() {
           </div>
           <div>
             <label className="text-sm font-medium mb-2 block">Select Class</label>
-            <Select>
+            <Select value={selectedClass} onValueChange={setSelectedClass}>
               <SelectTrigger>
-                <SelectValue placeholder="All" />
+                <SelectValue>{selectedClass === "all" ? "All Classes" : selectedClass}</SelectValue>
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Classes</SelectItem>
@@ -81,9 +101,9 @@ export default function FeeInvoice() {
           </div>
           <div>
             <label className="text-sm font-medium mb-2 block">Select Section</label>
-            <Select>
+            <Select value={selectedSection} onValueChange={setSelectedSection}>
               <SelectTrigger>
-                <SelectValue placeholder="All" />
+                <SelectValue>{selectedSection === "all" ? "All Sections" : selectedSection.toUpperCase()}</SelectValue>
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Sections</SelectItem>
@@ -119,7 +139,7 @@ export default function FeeInvoice() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {invoiceData.map((invoice) => (
+            {filteredInvoices.map((invoice) => (
               <TableRow key={invoice.id}>
                 <TableCell>
                   <span className="text-muted-foreground text-sm mr-2">0{invoice.id}.</span>
@@ -155,6 +175,13 @@ export default function FeeInvoice() {
                 </TableCell>
               </TableRow>
             ))}
+            {filteredInvoices.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={6} className="text-center py-4 text-muted-foreground">
+                  No invoices found.
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </Card>

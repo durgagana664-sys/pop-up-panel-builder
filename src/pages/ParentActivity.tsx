@@ -32,13 +32,14 @@ const parentActivityData = [
 
 const ParentActivity = () => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchText, setSearchText] = useState(""); // Added for search
   const totalPages = 7;
   const totalRows = 299;
 
   const getPageNumbers = () => {
     const pages = [];
     const maxVisible = 7;
-    
+
     if (totalPages <= maxVisible) {
       for (let i = 1; i <= totalPages; i++) {
         pages.push(i);
@@ -60,9 +61,16 @@ const ParentActivity = () => {
         pages.push(totalPages);
       }
     }
-    
+
     return pages;
   };
+
+  // Filter data based on search text for parent name, student name, or parentId
+  const filteredData = parentActivityData.filter(parent =>
+    parent.name.toLowerCase().includes(searchText.toLowerCase()) ||
+    parent.studentName.toLowerCase().includes(searchText.toLowerCase()) ||
+    parent.parentId.toLowerCase().includes(searchText.toLowerCase())
+  );
 
   return (
     <div className="p-6 space-y-6">
@@ -141,8 +149,10 @@ const ParentActivity = () => {
             <Input
               id="search"
               type="text"
-              placeholder="Parent Name/Parent ID"
+              placeholder="Parent Name/Parent ID/Student Name"
               className="w-full"
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
             />
           </div>
         </div>
@@ -175,7 +185,7 @@ const ParentActivity = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {parentActivityData.map((parent, index) => (
+              {filteredData.map((parent, index) => (
                 <TableRow key={parent.id} className={index % 2 === 0 ? "bg-background" : "bg-muted/30"}>
                   <TableCell className="text-muted-foreground">{parent.parentId}</TableCell>
                   <TableCell>
@@ -213,7 +223,6 @@ const ParentActivity = () => {
             >
               &lt;
             </Button>
-            
             {getPageNumbers().map((page, index) => (
               page === "..." ? (
                 <span key={`ellipsis-${index}`} className="px-2 text-muted-foreground">
@@ -225,13 +234,12 @@ const ParentActivity = () => {
                   variant={currentPage === page ? "default" : "outline"}
                   size="icon"
                   className="h-8 w-8"
-                  onClick={() => setCurrentPage(page as number)}
+                  onClick={() => setCurrentPage(page)}
                 >
                   {page}
                 </Button>
               )
             ))}
-            
             <Button
               variant="outline"
               size="icon"

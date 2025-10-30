@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,6 +9,8 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 
 export default function ScheduleMapper() {
+  const [searchText, setSearchText] = useState("");
+
   const students = [
     { id: "EPSs-079", name: "ETIKA", class: "5th", section: "A", schedule: "Monthly", image: "" },
     { id: "EPSs-080", name: "GARVITA", class: "5th", section: "A", schedule: "Monthly", image: "" },
@@ -19,6 +22,11 @@ export default function ScheduleMapper() {
     { id: "EPSs-086", name: "KHATIFA", class: "5th", section: "A", schedule: "Monthly", image: "" },
     { id: "EPSs-087", name: "KHUSHANG", class: "5th", section: "A", schedule: "Monthly", image: "" },
   ];
+
+  // Filter students based on search text (case insensitive)
+  const filteredStudents = students.filter((student) =>
+    student.name.toLowerCase().includes(searchText.toLowerCase())
+  );
 
   return (
     <div className="p-6 space-y-6">
@@ -66,10 +74,17 @@ export default function ScheduleMapper() {
               </SelectContent>
             </Select>
           </div>
+
+          {/* Search Input with state binding */}
           <div>
-            <Input placeholder="Search student" />
+            <Input
+              placeholder="Search student"
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+            />
           </div>
         </div>
+
         <div className="flex items-center gap-6 mt-4">
           <div className="flex items-center gap-2">
             <Switch id="show-deactivated" />
@@ -110,7 +125,7 @@ export default function ScheduleMapper() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {students.map((student, index) => (
+              {filteredStudents.map((student, index) => (
                 <TableRow key={index}>
                   <TableCell className="font-medium">{student.id}</TableCell>
                   <TableCell>
@@ -168,7 +183,7 @@ export default function ScheduleMapper() {
           </Table>
         </div>
         <div className="mt-4 flex justify-between items-center">
-          <div className="text-sm text-muted-foreground">Total Rows: 12</div>
+          <div className="text-sm text-muted-foreground">Total Rows: {filteredStudents.length}</div>
           <div className="flex gap-1">
             <Button variant="outline" size="sm">1</Button>
           </div>

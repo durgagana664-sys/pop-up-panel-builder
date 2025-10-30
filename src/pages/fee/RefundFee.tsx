@@ -1,9 +1,17 @@
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Search, ChevronDown } from "lucide-react";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Search } from "lucide-react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 const refundData = [
   {
@@ -97,63 +105,85 @@ const refundData = [
 ];
 
 export default function RefundFee() {
+  const [searchText, setSearchText] = useState("");
+
+  const filteredStudents = refundData.filter((student) =>
+    student.studentName.toLowerCase().includes(searchText.toLowerCase())
+  );
+
   return (
     <div className="p-6 space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-heading font-semibold text-foreground">
           Refund Fee
         </h1>
-      </div>
-
-      {/* Search */}
-      <Card className="p-4">
-        <div className="relative">
+        <div className="relative w-64">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Select Student"
+            placeholder="Search Student"
             className="pl-10"
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
           />
         </div>
-      </Card>
-
-      {/* Refund List */}
-      <div className="space-y-2">
-        {refundData.map((student) => (
-          <Collapsible key={student.id}>
-            <Card>
-              <div className="p-4">
-                <div className="grid grid-cols-12 gap-4 items-center">
-                  <div className="col-span-2 flex items-center gap-3">
-                    <ChevronDown className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-sm text-muted-foreground">{student.fatherName}</span>
-                  </div>
-                  <div className="col-span-2 flex items-center gap-3">
-                    <Avatar className="h-8 w-8">
-                      <AvatarImage src={student.avatar || undefined} />
-                      <AvatarFallback>{student.studentName[0]}</AvatarFallback>
-                    </Avatar>
-                    <span className="font-medium">{student.studentName}</span>
-                  </div>
-                  <div className="col-span-2 text-sm">{student.academicYear}</div>
-                  <div className="col-span-1 text-sm">{student.component}</div>
-                  <div className="col-span-1 text-sm">₹ {student.totalPaid}</div>
-                  <div className="col-span-1 text-sm">₹ {student.totalDue}</div>
-                  <div className="col-span-1 text-sm flex items-center gap-1">
-                    ₹ {student.totalRefunded}
-                    {student.totalPaid > 0 && <ChevronDown className="h-4 w-4" />}
-                  </div>
-                  <div className="col-span-1"></div>
-                  <div className="col-span-1">
-                    {student.totalPaid > 0 && (
-                      <Button variant="link" className="text-orange-500">Refund Fee</Button>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </Card>
-          </Collapsible>
-        ))}
       </div>
+
+      <Card>
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Father Name</TableHead>
+                <TableHead>Student Name</TableHead>
+                <TableHead>Academic Year</TableHead>
+                <TableHead>Component</TableHead>
+                <TableHead>Total Paid</TableHead>
+                <TableHead>Total Due</TableHead>
+                <TableHead>Total Refunded</TableHead>
+                <TableHead>Action</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filteredStudents.length === 0 && (
+                <TableRow>
+                  <TableCell colSpan={8} className="text-center py-4 text-muted-foreground">
+                    No students found
+                  </TableCell>
+                </TableRow>
+              )}
+              {filteredStudents.map((student) => (
+                <TableRow key={student.id}>
+                  <TableCell>{student.fatherName}</TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-3">
+                      <Avatar className="h-8 w-8">
+                        {student.avatar ? (
+                          <AvatarImage src={student.avatar} alt={student.studentName} />
+                        ) : (
+                          <AvatarFallback>{student.studentName[0]}</AvatarFallback>
+                        )}
+                      </Avatar>
+                      <span>{student.studentName}</span>
+                    </div>
+                  </TableCell>
+                  <TableCell>{student.academicYear}</TableCell>
+                  <TableCell>{student.component}</TableCell>
+                  <TableCell>₹ {student.totalPaid}</TableCell>
+                  <TableCell>₹ {student.totalDue}</TableCell>
+                  <TableCell>₹ {student.totalRefunded}</TableCell>
+                  <TableCell>
+                    {student.totalPaid > 0 && (
+                      <Button variant="link" className="text-orange-500">
+                        Refund Fee
+                      </Button>
+                    )}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      </Card>
     </div>
   );
 }

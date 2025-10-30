@@ -14,6 +14,7 @@ import {
   ChevronDown,
   UserCog,
 } from "lucide-react";
+
 import {
   Sidebar,
   SidebarContent,
@@ -24,20 +25,23 @@ import {
   SidebarMenuButton,
   useSidebar,
 } from "@/components/ui/sidebar";
+
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 
+// Define your menu items with colors
 const menuItems = [
-  { title: "Dashboard", url: "/", icon: LayoutDashboard },
-  { title: "Assignment", url: "/assignment", icon: ClipboardList },
-  { title: "Time Table", url: "/timetable", icon: Calendar },
-  { title: "Student Management", url: "/students", icon: Users },
+  { title: "Dashboard", url: "/", icon: LayoutDashboard, color: "text-indigo-500" },
+  { title: "Assignment", url: "/", icon: ClipboardList, color: "text-green-600" },
+  { title: "Time Table", url: "/", icon: Calendar, color: "text-blue-600" },
+  { title: "Student Management", url: "/", icon: Users, color: "text-orange-500" },
   {
     title: "Staff Management",
     icon: UserCog,
+    color: "text-purple-600",
     subItems: [
       { title: "Staff Directory", url: "/staff/staffdirectory" },
       { title: "Add Staff", url: "/staff/addstaff" },
@@ -50,6 +54,7 @@ const menuItems = [
   {
     title: "Download Statistics",
     icon: Download,
+    color: "text-pink-600",
     subItems: [
       { title: "Student Download Status", url: "/download-stats/student" },
       { title: "Staff Download Status", url: "/download-stats/staff" },
@@ -61,6 +66,7 @@ const menuItems = [
   {
     title: "Fee Management",
     icon: DollarSign,
+    color: "text-yellow-600",
     subItems: [
       { title: "Fee Configuration", url: "/fee/configuration" },
       { title: "Fee Basics", url: "/fee/basics" },
@@ -77,16 +83,17 @@ const menuItems = [
   {
     title: "Transport Management",
     icon: Bus,
+    color: "text-red-500",
     subItems: [
       { title: "Transport Basics", url: "/transport/basics" },
       { title: "Vehicles", url: "/transport/vehicles" },
       { title: "Stops", url: "/transport/stops" },
       { title: "Routes", url: "/transport/routes" },
-      { title: "Vehicle trip mapping", url: "/transport/vehicle-trip" }, // ✅ FIXED
-      { title: "Student route mapping", url: "/transport/student-route" }, // ✅ FIXED
+      { title: "Vehicle trip mapping", url: "/transport/vehicle-trip" },
+      { title: "Student route mapping", url: "/transport/student-route" },
     ],
   },
-  { title: "ID Card / Bus Pass", url: "/id-cards", icon: CreditCard },
+  { title: "ID Card / Bus Pass", url: "/id-cards", icon: CreditCard, color: "text-green-500" },
 ];
 
 export function AppSidebar() {
@@ -94,7 +101,7 @@ export function AppSidebar() {
   const location = useLocation();
   const isCollapsed = state === "collapsed";
 
-  // State for all collapsible sections
+  // State for collapsible sections
   const [openStaffManagement, setOpenStaffManagement] = useState(
     location.pathname.startsWith("/staff")
   );
@@ -151,35 +158,22 @@ export function AppSidebar() {
                 const isFeeManagement = item.title === "Fee Management";
                 const isTransport = item.title === "Transport Management";
 
-                const isOpen = isStaffManagement
-                  ? openStaffManagement
-                  : isDownloadStats
-                  ? openDownloadStats
-                  : isFeeManagement
-                  ? openFeeManagement
-                  : isTransport
-                  ? openTransport
-                  : false;
+                const isOpen =
+                  (isStaffManagement && openStaffManagement) ||
+                  (isDownloadStats && openDownloadStats) ||
+                  (isFeeManagement && openFeeManagement) ||
+                  (isTransport && openTransport);
 
-                const setIsOpen = isStaffManagement
-                  ? setOpenStaffManagement
-                  : isDownloadStats
-                  ? setOpenDownloadStats
-                  : isFeeManagement
-                  ? setOpenFeeManagement
-                  : isTransport
-                  ? setOpenTransport
-                  : () => {};
-
-                const pathPrefix = isStaffManagement
-                  ? "/staff"
-                  : isDownloadStats
-                  ? "/download-stats"
-                  : isFeeManagement
-                  ? "/fee"
-                  : isTransport
-                  ? "/transport"
-                  : "";
+                const setIsOpen =
+                  isStaffManagement
+                    ? setOpenStaffManagement
+                    : isDownloadStats
+                    ? setOpenDownloadStats
+                    : isFeeManagement
+                    ? setOpenFeeManagement
+                    : isTransport
+                    ? setOpenTransport
+                    : () => {};
 
                 return (
                   <SidebarMenuItem key={item.title}>
@@ -187,7 +181,7 @@ export function AppSidebar() {
                       <Collapsible open={isOpen} onOpenChange={setIsOpen}>
                         <CollapsibleTrigger asChild>
                           <SidebarMenuButton>
-                            <item.icon className="h-4 w-4" />
+                            <item.icon className={`h-4 w-4 ${item.color}`} />
                             {!isCollapsed && (
                               <>
                                 <span>{item.title}</span>
@@ -220,7 +214,7 @@ export function AppSidebar() {
                       <NavLink to={item.url!}>
                         {({ isActive }) => (
                           <SidebarMenuButton className={getNavCls(isActive)}>
-                            <item.icon className="h-4 w-4" />
+                            <item.icon className={`h-4 w-4 ${item.color}`} />
                             {!isCollapsed && <span>{item.title}</span>}
                           </SidebarMenuButton>
                         )}

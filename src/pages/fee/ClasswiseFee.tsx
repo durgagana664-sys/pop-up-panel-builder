@@ -6,41 +6,91 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Switch } from "@/components/ui/switch";
 import { Pencil } from "lucide-react";
 
+// Constants
+const academicYears = ["2023", "2024", "2025"];
+const classes = ["Nursery", "LKG", "UKG", "1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th", "10th"];
+const sections = ["a", "b", "c"];
+
+const baseFees = {
+  admissionFee: 3000,
+  booksUniform: 14000,
+  computerLabFee: 230000,
+  examFee: 1800,
+  fees: 20000,
+  hostelFee: 12000,
+};
+
+function generateFees() {
+  const dayScholarFees = [];
+  const hostelerFees = [];
+
+  academicYears.forEach(year => {
+    classes.forEach(cls => {
+      sections.forEach(section => {
+        // slight variation in amounts, e.g. increase by class index * 100
+        const classIndex = classes.indexOf(cls);
+        const yearFactor = (parseInt(year) - 2023) * 100;
+
+        // Day scholar fees
+        dayScholarFees.push(
+          { type: "Admission Fee", status: true, installments: 1, amount: `₹ ${baseFees.admissionFee + classIndex * 100 + yearFactor}`, academicYear: year, class: cls, section },
+          { type: "Books + Uniform", status: true, installments: 1, amount: `₹ ${baseFees.booksUniform + classIndex * 200 + yearFactor}`, academicYear: year, class: cls, section },
+          { type: "Computer Lab Fee", status: true, installments: 1, amount: `₹ ${baseFees.computerLabFee}`, academicYear: year, class: cls, section },
+          { type: "Exam Fee", status: true, installments: 1, amount: `₹ ${baseFees.examFee}`, academicYear: year, class: cls, section },
+          { type: "Fees", status: true, installments: 12, amount: `₹ ${baseFees.fees + classIndex * 200 + yearFactor}`, academicYear: year, class: cls, section },
+          { type: "Miscellaneous", status: true, installments: 1, amount: "", academicYear: year, class: cls, section },
+          { type: "Registration Charges", status: true, installments: 1, amount: "", academicYear: year, class: cls, section },
+          { type: "Security Charges", status: true, installments: 1, amount: "", academicYear: year, class: cls, section },
+          { type: "Transport", status: true, installments: 12, amount: "", academicYear: year, class: cls, section },
+          { type: "Transport Fee", status: true, installments: 12, amount: "", academicYear: year, class: cls, section },
+          { type: "Tuition Fee", status: true, installments: 12, amount: "", academicYear: year, class: cls, section },
+          { type: "UNI Exam Fee", status: true, installments: 1, amount: "", academicYear: year, class: cls, section },
+          { type: "Hostel Fee", status: false, installments: 2, amount: "", academicYear: year, class: cls, section }
+        );
+
+        // Hosteler fees - mostly similar but hostel fee active, transport fees inactive
+        hostelerFees.push(
+          { type: "Admission Fee", status: true, installments: 1, amount: `₹ ${baseFees.admissionFee + classIndex * 100 + yearFactor}`, academicYear: year, class: cls, section },
+          { type: "Books + Uniform", status: true, installments: 1, amount: `₹ ${baseFees.booksUniform + classIndex * 200 + yearFactor}`, academicYear: year, class: cls, section },
+          { type: "Computer Lab Fee", status: true, installments: 1, amount: `₹ ${baseFees.computerLabFee}`, academicYear: year, class: cls, section },
+          { type: "Exam Fee", status: true, installments: 1, amount: `₹ ${baseFees.examFee}`, academicYear: year, class: cls, section },
+          { type: "Fees", status: true, installments: 12, amount: `₹ ${baseFees.fees + classIndex * 200 + yearFactor}`, academicYear: year, class: cls, section },
+          { type: "Miscellaneous", status: true, installments: 1, amount: "", academicYear: year, class: cls, section },
+          { type: "Registration Charges", status: true, installments: 1, amount: "", academicYear: year, class: cls, section },
+          { type: "Security Charges", status: true, installments: 1, amount: "", academicYear: year, class: cls, section },
+          { type: "Transport", status: false, installments: 12, amount: "", academicYear: year, class: cls, section },
+          { type: "Transport Fee", status: false, installments: 12, amount: "", academicYear: year, class: cls, section },
+          { type: "Tuition Fee", status: true, installments: 12, amount: "", academicYear: year, class: cls, section },
+          { type: "UNI Exam Fee", status: true, installments: 1, amount: "", academicYear: year, class: cls, section },
+          { type: "Hostel Fee", status: true, installments: 2, amount: `₹ ${baseFees.hostelFee + yearFactor}`, academicYear: year, class: cls, section }
+        );
+      });
+    });
+  });
+
+  return { dayScholarFees, hostelerFees };
+}
+
 export default function ClasswiseFee() {
   const [academicYear, setAcademicYear] = useState("2025");
-  const [selectedClass, setSelectedClass] = useState("3rd");
+  const [selectedClass, setSelectedClass] = useState("Nursery");
   const [selectedSection, setSelectedSection] = useState("a");
-  const dayScholarFees = [
-    { type: "Admission Fee", status: true, installments: 1, amount: "₹ 3,000" },
-    { type: "Books + Uniform", status: true, installments: 1, amount: "₹ 14,000" },
-    { type: "Computer Lab Fee", status: true, installments: 1, amount: "₹ 2,30,000" },
-    { type: "Exam Fee", status: true, installments: 1, amount: "₹ 1,800" },
-    { type: "Fees", status: true, installments: 12, amount: "₹ 20,000" },
-    { type: "Miscellaneous", status: true, installments: 1, amount: "" },
-    { type: "Registration Charges", status: true, installments: 1, amount: "" },
-    { type: "Security Charges", status: true, installments: 1, amount: "" },
-    { type: "Transport", status: true, installments: 12, amount: "" },
-    { type: "Transport Fee", status: true, installments: 12, amount: "" },
-    { type: "Tuition Fee", status: true, installments: 12, amount: "" },
-    { type: "UNI Exam Fee", status: true, installments: 1, amount: "" },
-    { type: "Hostel Fee", status: false, installments: 2, amount: "" },
-  ];
 
-  const hostelerFees = [
-     { type: "Admission Fee", status: true, installments: 1, amount: "₹ 3,000" },
-    { type: "Books + Uniform", status: true, installments: 1, amount: "₹ 14,000" },
-    { type: "Computer Lab Fee", status: true, installments: 1, amount: "₹ 2,30,000" },
-    { type: "Exam Fee", status: true, installments: 1, amount: "₹ 1,800" },
-    { type: "Fees", status: true, installments: 12, amount: "₹ 20,000" },
-    { type: "Miscellaneous", status: true, installments: 1, amount: "" },
-    { type: "Registration Charges", status: true, installments: 1, amount: "" },
-    { type: "Security Charges", status: true, installments: 1, amount: "" },
-    { type: "Transport", status: false, installments: 12, amount: "" },
-    { type: "Transport Fee", status: false, installments: 12, amount: "" },
-    { type: "Tuition Fee", status: true, installments: 12, amount: "" },
-    { type: "UNI Exam Fee", status: true, installments: 1, amount: "" },
-    { type: "Hostel Fee", status: true, installments: 2, amount: "" },
-  ];
+  const { dayScholarFees: fullDayScholarFees, hostelerFees: fullHostelerFees } = generateFees();
+
+  const filteredDayScholarFees = fullDayScholarFees.filter(
+    (fee) =>
+      fee.academicYear === academicYear &&
+      fee.class === selectedClass &&
+      fee.section === selectedSection
+  );
+
+  const filteredHostelerFees = fullHostelerFees.filter(
+    (fee) =>
+      fee.academicYear === academicYear &&
+      fee.class === selectedClass &&
+      fee.section === selectedSection
+  );
 
   return (
     <div className="p-6 space-y-6">
@@ -59,8 +109,9 @@ export default function ClasswiseFee() {
                 <SelectValue placeholder="Academic Year" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="2025">Apr 2025 - Mar 2026</SelectItem>
+                <SelectItem value="2023">Apr 2023 - Mar 2024</SelectItem>
                 <SelectItem value="2024">Apr 2024 - Mar 2025</SelectItem>
+                <SelectItem value="2025">Apr 2025 - Mar 2026</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -70,9 +121,7 @@ export default function ClasswiseFee() {
                 <SelectValue placeholder="Select Class" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="3rd">3rd</SelectItem>
-                <SelectItem value="4th">4th</SelectItem>
-                <SelectItem value="5th">5th</SelectItem>
+                {classes.map(c => (<SelectItem key={c} value={c}>{c}</SelectItem>))}
               </SelectContent>
             </Select>
           </div>
@@ -82,8 +131,7 @@ export default function ClasswiseFee() {
                 <SelectValue placeholder="Select Section" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="a">A</SelectItem>
-                <SelectItem value="b">B</SelectItem>
+                {sections.map(s => (<SelectItem key={s} value={s}>{s.toUpperCase()}</SelectItem>))}
               </SelectContent>
             </Select>
           </div>
@@ -113,19 +161,15 @@ export default function ClasswiseFee() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {dayScholarFees.map((fee, index) => (
-                <TableRow key={index} className={fee.status ? "bg-accent/30" : "bg-destructive/10"}>
+              {filteredDayScholarFees.length > 0 ? filteredDayScholarFees.map((fee, idx) => (
+                <TableRow key={idx} className={fee.status ? "bg-accent/30" : "bg-destructive/10"}>
                   <TableCell className="font-medium">{fee.type}</TableCell>
                   <TableCell>
                     <Switch checked={fee.status} />
                   </TableCell>
                   <TableCell>{fee.installments}</TableCell>
                   <TableCell>
-                    {fee.amount ? (
-                      <span className="font-semibold">{fee.amount}</span>
-                    ) : (
-                      <span className="text-muted-foreground">-</span>
-                    )}
+                    {fee.amount ? <span className="font-semibold">{fee.amount}</span> : <span className="text-muted-foreground">-</span>}
                   </TableCell>
                   <TableCell>
                     <Button variant="ghost" size="icon">
@@ -133,12 +177,16 @@ export default function ClasswiseFee() {
                     </Button>
                   </TableCell>
                 </TableRow>
-              ))}
+              )) : (
+                <TableRow>
+                  <TableCell colSpan={5} className="text-center">No fees found for selected filters.</TableCell>
+                </TableRow>
+              )}
             </TableBody>
           </Table>
         </div>
         <div className="mt-4 text-right">
-          <Button variant="outline">Component-Wise Fee Details for Class 3rd</Button>
+          <Button variant="outline">Component-Wise Fee Details for Class {selectedClass}</Button>
         </div>
       </Card>
 
@@ -152,24 +200,20 @@ export default function ClasswiseFee() {
                 <TableHead>Fee Type</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Installment</TableHead>
-                <TableHead>Mandatory</TableHead>
+                <TableHead>Amount</TableHead>
                 <TableHead>Action</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {hostelerFees.map((fee, index) => (
-                <TableRow key={index} className={fee.status ? "bg-accent/30" : "bg-destructive/10"}>
+              {filteredHostelerFees.length > 0 ? filteredHostelerFees.map((fee, idx) => (
+                <TableRow key={idx} className={fee.status ? "bg-accent/30" : "bg-destructive/10"}>
                   <TableCell className="font-medium">{fee.type}</TableCell>
                   <TableCell>
                     <Switch checked={fee.status} />
                   </TableCell>
                   <TableCell>{fee.installments}</TableCell>
                   <TableCell>
-                    {fee.amount ? (
-                      <span className="font-semibold">{fee.amount}</span>
-                    ) : (
-                      <span className="text-muted-foreground">-</span>
-                    )}
+                    {fee.amount ? <span className="font-semibold">{fee.amount}</span> : <span className="text-muted-foreground">-</span>}
                   </TableCell>
                   <TableCell>
                     <Button variant="ghost" size="icon">
@@ -177,7 +221,11 @@ export default function ClasswiseFee() {
                     </Button>
                   </TableCell>
                 </TableRow>
-              ))}
+              )) : (
+                <TableRow>
+                  <TableCell colSpan={5} className="text-center">No fees found for selected filters.</TableCell>
+                </TableRow>
+              )}
             </TableBody>
           </Table>
         </div>
