@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -6,6 +7,9 @@ import { Switch } from "@/components/ui/switch";
 import { Pencil } from "lucide-react";
 
 export default function ClasswiseFee() {
+  const [academicYear, setAcademicYear] = useState("2025");
+  const [selectedClass, setSelectedClass] = useState("3rd");
+  const [selectedSection, setSelectedSection] = useState("a");
   const dayScholarFees = [
     { type: "Admission Fee", status: true, installments: 1, amount: "₹ 3,000" },
     { type: "Books + Uniform", status: true, installments: 1, amount: "₹ 14,000" },
@@ -50,7 +54,7 @@ export default function ClasswiseFee() {
       <Card className="p-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <Select defaultValue="2025">
+            <Select value={academicYear} onValueChange={setAcademicYear}>
               <SelectTrigger>
                 <SelectValue placeholder="Academic Year" />
               </SelectTrigger>
@@ -61,7 +65,7 @@ export default function ClasswiseFee() {
             </Select>
           </div>
           <div>
-            <Select defaultValue="3rd">
+            <Select value={selectedClass} onValueChange={setSelectedClass}>
               <SelectTrigger>
                 <SelectValue placeholder="Select Class" />
               </SelectTrigger>
@@ -73,7 +77,7 @@ export default function ClasswiseFee() {
             </Select>
           </div>
           <div>
-            <Select defaultValue="a">
+            <Select value={selectedSection} onValueChange={setSelectedSection}>
               <SelectTrigger>
                 <SelectValue placeholder="Select Section" />
               </SelectTrigger>

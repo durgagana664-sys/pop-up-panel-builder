@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,6 +11,12 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 
 export default function StudentwiseFee() {
+  const [academicYear, setAcademicYear] = useState("2025");
+  const [selectedClass, setSelectedClass] = useState("3rd");
+  const [selectedSection, setSelectedSection] = useState("a");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [showDeactivated, setShowDeactivated] = useState(true);
+  const [showDeleted, setShowDeleted] = useState(false);
   const students = [
     { name: "ROHIT", admissionId: "EPSs-064", father: "Golu", class: "3rd A", schedule: "Monthly", receivable: "₹ 2,72,600", paid: "₹ 2,72,600", due: "₹ 0", status: "Active" },
     { name: "SANA", admissionId: "EPSs-065", father: "", class: "3rd A", schedule: "Monthly", receivable: "₹ 2,72,600", paid: "₹ 2,72,600", due: "₹ 0", status: "Active" },
@@ -25,6 +32,15 @@ export default function StudentwiseFee() {
     { name: "Vansh", admissionId: "EPSs-235", father: "", class: "3rd A", schedule: "Monthly", receivable: "₹ 2,72,600", paid: "₹ 2,72,600", due: "₹ 0", status: "Active" },
   ];
 
+  // Filter students based on all selections
+  const filteredStudents = students.filter(student => {
+    const matchesSearch = searchQuery === "" || 
+      student.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      student.admissionId.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    return matchesSearch;
+  });
+
   return (
     <div className="p-6 space-y-6">
       <div className="flex justify-between items-center">
@@ -37,7 +53,7 @@ export default function StudentwiseFee() {
       <Card className="p-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div>
-            <Select defaultValue="2025">
+            <Select value={academicYear} onValueChange={setAcademicYear}>
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
@@ -48,7 +64,7 @@ export default function StudentwiseFee() {
             </Select>
           </div>
           <div>
-            <Select defaultValue="3rd">
+            <Select value={selectedClass} onValueChange={setSelectedClass}>
               <SelectTrigger>
                 <SelectValue placeholder="Select Class" />
               </SelectTrigger>
@@ -60,7 +76,7 @@ export default function StudentwiseFee() {
             </Select>
           </div>
           <div>
-            <Select defaultValue="a">
+            <Select value={selectedSection} onValueChange={setSelectedSection}>
               <SelectTrigger>
                 <SelectValue placeholder="Select Section" />
               </SelectTrigger>
@@ -71,18 +87,22 @@ export default function StudentwiseFee() {
             </Select>
           </div>
           <div>
-            <Input placeholder="Search by student name/admission ID" />
+            <Input 
+              placeholder="Search by student name/admission ID" 
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
           </div>
         </div>
         <div className="flex items-center gap-6 mt-4">
           <div className="flex items-center gap-2">
-            <Switch defaultChecked id="show-deactivated" />
+            <Switch checked={showDeactivated} onCheckedChange={setShowDeactivated} id="show-deactivated" />
             <Label htmlFor="show-deactivated" className="cursor-pointer text-sm">
               Show Deactivated Students
             </Label>
           </div>
           <div className="flex items-center gap-2">
-            <Switch id="show-deleted" />
+            <Switch checked={showDeleted} onCheckedChange={setShowDeleted} id="show-deleted" />
             <Label htmlFor="show-deleted" className="cursor-pointer text-sm">
               Show Deleted Students
             </Label>
@@ -109,7 +129,7 @@ export default function StudentwiseFee() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {students.map((student, index) => (
+              {filteredStudents.map((student, index) => (
                 <TableRow key={index}>
                   <TableCell>
                     <Avatar className="h-8 w-8">

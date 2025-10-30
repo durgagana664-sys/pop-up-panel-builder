@@ -21,6 +21,12 @@ export default function FeeBasics() {
   ]);
   
   const [isAddScheduleDialogOpen, setIsAddScheduleDialogOpen] = useState(false);
+  const [isAddComponentDialogOpen, setIsAddComponentDialogOpen] = useState(false);
+  const [isAddDiscountDialogOpen, setIsAddDiscountDialogOpen] = useState(false);
+  const [isAddMiscFeeDialogOpen, setIsAddMiscFeeDialogOpen] = useState(false);
+  const [isAddFineDialogOpen, setIsAddFineDialogOpen] = useState(false);
+  const [isAddAcademicYearDialogOpen, setIsAddAcademicYearDialogOpen] = useState(false);
+  
   const [newSchedule, setNewSchedule] = useState({
     class: "",
     installments: "",
@@ -29,12 +35,73 @@ export default function FeeBasics() {
     endDate: "",
   });
 
+  const [newComponent, setNewComponent] = useState({
+    head: "",
+    component: "",
+    admission: "All Students",
+    gender: "All Students",
+  });
+
+  const [newDiscount, setNewDiscount] = useState({
+    name: "",
+    remarks: "",
+  });
+
+  const [newMiscFee, setNewMiscFee] = useState({
+    head: "",
+    name: "",
+  });
+
+  const [newFine, setNewFine] = useState({
+    name: "",
+    type: "Fixed Amount",
+    status: false,
+  });
+
+  const [newAcademicYear, setNewAcademicYear] = useState({
+    startDate: "",
+    endDate: "",
+  });
+
+  const [feeComponents, setFeeComponents] = useState([
+    { head: "CU exam fee", component: "Exam Fee", admission: "All Students", gender: "All Students" },
+    { head: "Registration", component: "Fees", admission: "New", gender: "All Students" },
+    { head: "School Fee", component: "Transport Fee", admission: "All Students", gender: "All Students" },
+    { head: "School Fees", component: "Tution Fee", admission: "All Students", gender: "All Students" },
+    { head: "", component: "Admission Fee", admission: "New", gender: "All Students" },
+    { head: "", component: "Registration Charges", admission: "New", gender: "All Students" },
+    { head: "", component: "Computer Lab Fee", admission: "All Students", gender: "All Students" },
+    { head: "", component: "UNI Exam Fee", admission: "All Students", gender: "All Students" },
+  ]);
+
+  const [feeDiscounts, setFeeDiscounts] = useState([
+    { name: "Staff Discount", remarks: "" },
+    { name: "New Student", remarks: "" },
+    { name: "New student", remarks: "" },
+    { name: "Siblings Discount", remarks: "" },
+  ]);
+
+  const [miscFees, setMiscFees] = useState([
+    { head: "School Fees", name: "TC Fee" },
+    { head: "", name: "Extra class charges" },
+    { head: "", name: "Parking Fee" },
+    { head: "", name: "Quilt charges" },
+  ]);
+
+  const [feeFines, setFeeFines] = useState([
+    { name: "Fine", type: "Fixed Amount", status: false },
+    { name: "Fine 2", type: "Fixed Amount", status: false },
+    { name: "Late Fee", type: "Fixed Amount", status: true },
+    { name: "Late Fee fine", type: "Day-wise Amount", status: true },
+    { name: "Late Fine", type: "Slab-wise Amount", status: true },
+  ]);
+
   const stats = [
     { label: "No. of Fee schedule created", value: feeSchedules.length, color: "bg-green-500" },
-    { label: "No. of Fee component created", value: 12, color: "bg-red-500" },
-    { label: "No. of Fee discounts created", value: 4, color: "bg-orange-500" },
-    { label: "No. of Misc Fee created", value: 2, color: "bg-yellow-500" },
-    { label: "No. of Fee Fine created", value: 1, color: "bg-gray-500" },
+    { label: "No. of Fee component created", value: feeComponents.length, color: "bg-red-500" },
+    { label: "No. of Fee discounts created", value: feeDiscounts.length, color: "bg-orange-500" },
+    { label: "No. of Misc Fee created", value: miscFees.length, color: "bg-yellow-500" },
+    { label: "No. of Fee Fine created", value: feeFines.length, color: "bg-gray-500" },
   ];
 
   const handleAddSchedule = () => {
@@ -71,16 +138,109 @@ export default function FeeBasics() {
     setIsAddScheduleDialogOpen(false);
   };
 
-  const feeComponents = [
-    { head: "CU exam fee", component: "Exam Fee", admission: "All Students", gender: "All Students" },
-    { head: "Registration", component: "Fees", admission: "New", gender: "All Students" },
-    { head: "School Fee", component: "Transport Fee", admission: "All Students", gender: "All Students" },
-    { head: "School Fees", component: "Tution Fee", admission: "All Students", gender: "All Students" },
-    { head: "", component: "Admission Fee", admission: "New", gender: "All Students" },
-    { head: "", component: "Registration Charges", admission: "New", gender: "All Students" },
-    { head: "", component: "Computer Lab Fee", admission: "All Students", gender: "All Students" },
-    { head: "", component: "UNI Exam Fee", admission: "All Students", gender: "All Students" },
-  ];
+  const handleAddComponent = () => {
+    if (!newComponent.component) {
+      toast({
+        title: "Error",
+        description: "Component name is required",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setFeeComponents([...feeComponents, newComponent]);
+    toast({
+      title: "Success",
+      description: "Fee component added successfully",
+    });
+
+    setNewComponent({
+      head: "",
+      component: "",
+      admission: "All Students",
+      gender: "All Students",
+    });
+    setIsAddComponentDialogOpen(false);
+  };
+
+  const handleAddDiscount = () => {
+    if (!newDiscount.name) {
+      toast({
+        title: "Error",
+        description: "Discount name is required",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setFeeDiscounts([...feeDiscounts, newDiscount]);
+    toast({
+      title: "Success",
+      description: "Fee discount added successfully",
+    });
+
+    setNewDiscount({ name: "", remarks: "" });
+    setIsAddDiscountDialogOpen(false);
+  };
+
+  const handleAddMiscFee = () => {
+    if (!newMiscFee.name) {
+      toast({
+        title: "Error",
+        description: "Misc fee name is required",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setMiscFees([...miscFees, newMiscFee]);
+    toast({
+      title: "Success",
+      description: "Misc fee added successfully",
+    });
+
+    setNewMiscFee({ head: "", name: "" });
+    setIsAddMiscFeeDialogOpen(false);
+  };
+
+  const handleAddFine = () => {
+    if (!newFine.name) {
+      toast({
+        title: "Error",
+        description: "Fine name is required",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setFeeFines([...feeFines, newFine]);
+    toast({
+      title: "Success",
+      description: "Fee fine added successfully",
+    });
+
+    setNewFine({ name: "", type: "Fixed Amount", status: false });
+    setIsAddFineDialogOpen(false);
+  };
+
+  const handleAddAcademicYear = () => {
+    if (!newAcademicYear.startDate || !newAcademicYear.endDate) {
+      toast({
+        title: "Error",
+        description: "Please fill in all fields",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    toast({
+      title: "Success",
+      description: "Academic year added successfully",
+    });
+
+    setNewAcademicYear({ startDate: "", endDate: "" });
+    setIsAddAcademicYearDialogOpen(false);
+  };
 
   return (
     <div className="p-6 space-y-6">
@@ -98,7 +258,7 @@ export default function FeeBasics() {
               <SelectItem value="2024">Apr 2024 - Mar 2025</SelectItem>
             </SelectContent>
           </Select>
-          <Button>Add Academic Year</Button>
+          <Button onClick={() => setIsAddAcademicYearDialogOpen(true)}>Add Academic Year</Button>
         </div>
       </div>
 
@@ -156,7 +316,7 @@ export default function FeeBasics() {
           <h2 className="text-lg font-semibold text-foreground">2. Fee Component</h2>
           <div className="flex gap-2">
             <Button variant="outline">Component Reordering</Button>
-            <Button>Add Fee Component</Button>
+            <Button onClick={() => setIsAddComponentDialogOpen(true)}>Add Fee Component</Button>
           </div>
         </div>
         <Table>
@@ -192,7 +352,7 @@ export default function FeeBasics() {
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-semibold text-foreground">3. Fee Discounts</h2>
           <div className="flex gap-2">
-            <Button variant="outline">ADD FEE DISCOUNTS</Button>
+            <Button variant="outline" onClick={() => setIsAddDiscountDialogOpen(true)}>ADD FEE DISCOUNTS</Button>
             <Button variant="outline">SHOW LOGS</Button>
           </div>
         </div>
@@ -205,62 +365,22 @@ export default function FeeBasics() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            <TableRow>
-              <TableCell className="font-medium">Staff Discount</TableCell>
-              <TableCell></TableCell>
-              <TableCell>
-                <div className="flex gap-2">
-                  <Button variant="ghost" size="icon">
-                    <Pencil className="h-4 w-4 text-orange-500" />
-                  </Button>
-                  <Button variant="ghost" size="icon" className="text-orange-500">
-                    🗑️
-                  </Button>
-                </div>
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell className="font-medium">New Student</TableCell>
-              <TableCell></TableCell>
-              <TableCell>
-                <div className="flex gap-2">
-                  <Button variant="ghost" size="icon">
-                    <Pencil className="h-4 w-4 text-orange-500" />
-                  </Button>
-                  <Button variant="ghost" size="icon" className="text-orange-500">
-                    🗑️
-                  </Button>
-                </div>
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell className="font-medium">New student</TableCell>
-              <TableCell></TableCell>
-              <TableCell>
-                <div className="flex gap-2">
-                  <Button variant="ghost" size="icon">
-                    <Pencil className="h-4 w-4 text-orange-500" />
-                  </Button>
-                  <Button variant="ghost" size="icon" className="text-orange-500">
-                    🗑️
-                  </Button>
-                </div>
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell className="font-medium">Siblings Discount</TableCell>
-              <TableCell></TableCell>
-              <TableCell>
-                <div className="flex gap-2">
-                  <Button variant="ghost" size="icon">
-                    <Pencil className="h-4 w-4 text-orange-500" />
-                  </Button>
-                  <Button variant="ghost" size="icon" className="text-orange-500">
-                    🗑️
-                  </Button>
-                </div>
-              </TableCell>
-            </TableRow>
+            {feeDiscounts.map((discount, index) => (
+              <TableRow key={index}>
+                <TableCell className="font-medium">{discount.name}</TableCell>
+                <TableCell>{discount.remarks}</TableCell>
+                <TableCell>
+                  <div className="flex gap-2">
+                    <Button variant="ghost" size="icon">
+                      <Pencil className="h-4 w-4 text-orange-500" />
+                    </Button>
+                    <Button variant="ghost" size="icon" className="text-orange-500">
+                      🗑️
+                    </Button>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </Card>
@@ -270,7 +390,7 @@ export default function FeeBasics() {
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-semibold text-foreground">4. Misc. Fee</h2>
           <div className="flex gap-2">
-            <Button variant="outline">ADD MISC. FEE</Button>
+            <Button variant="outline" onClick={() => setIsAddMiscFeeDialogOpen(true)}>ADD MISC. FEE</Button>
             <Button variant="outline">SHOW LOGS</Button>
           </div>
         </div>
@@ -283,62 +403,22 @@ export default function FeeBasics() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            <TableRow>
-              <TableCell className="font-medium">School Fees</TableCell>
-              <TableCell>TC Fee</TableCell>
-              <TableCell>
-                <div className="flex gap-2">
-                  <Button variant="ghost" size="icon">
-                    <Pencil className="h-4 w-4 text-orange-500" />
-                  </Button>
-                  <Button variant="ghost" size="icon" className="text-orange-500">
-                    🗑️
-                  </Button>
-                </div>
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell></TableCell>
-              <TableCell>Extra class charges</TableCell>
-              <TableCell>
-                <div className="flex gap-2">
-                  <Button variant="ghost" size="icon">
-                    <Pencil className="h-4 w-4 text-orange-500" />
-                  </Button>
-                  <Button variant="ghost" size="icon" className="text-orange-500">
-                    🗑️
-                  </Button>
-                </div>
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell></TableCell>
-              <TableCell>Parking Fee</TableCell>
-              <TableCell>
-                <div className="flex gap-2">
-                  <Button variant="ghost" size="icon">
-                    <Pencil className="h-4 w-4 text-orange-500" />
-                  </Button>
-                  <Button variant="ghost" size="icon" className="text-orange-500">
-                    🗑️
-                  </Button>
-                </div>
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell></TableCell>
-              <TableCell>Quilt charges</TableCell>
-              <TableCell>
-                <div className="flex gap-2">
-                  <Button variant="ghost" size="icon">
-                    <Pencil className="h-4 w-4 text-orange-500" />
-                  </Button>
-                  <Button variant="ghost" size="icon" className="text-orange-500">
-                    🗑️
-                  </Button>
-                </div>
-              </TableCell>
-            </TableRow>
+            {miscFees.map((fee, index) => (
+              <TableRow key={index}>
+                <TableCell className="font-medium">{fee.head}</TableCell>
+                <TableCell>{fee.name}</TableCell>
+                <TableCell>
+                  <div className="flex gap-2">
+                    <Button variant="ghost" size="icon">
+                      <Pencil className="h-4 w-4 text-orange-500" />
+                    </Button>
+                    <Button variant="ghost" size="icon" className="text-orange-500">
+                      🗑️
+                    </Button>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </Card>
@@ -348,7 +428,7 @@ export default function FeeBasics() {
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-lg font-semibold text-foreground">5. Fee fine</h2>
           <div className="flex gap-2">
-            <Button variant="outline">ADD FEE FINE</Button>
+            <Button variant="outline" onClick={() => setIsAddFineDialogOpen(true)}>ADD FEE FINE</Button>
             <Button variant="outline">SHOW LOGS</Button>
           </div>
         </div>
@@ -362,66 +442,20 @@ export default function FeeBasics() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            <TableRow>
-              <TableCell className="font-medium">Fine</TableCell>
-              <TableCell>Fixed Amount</TableCell>
-              <TableCell>
-                <Switch defaultChecked={false} />
-              </TableCell>
-              <TableCell>
-                <Button variant="ghost" size="icon">
-                  <Pencil className="h-4 w-4 text-orange-500" />
-                </Button>
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell className="font-medium">Fine 2</TableCell>
-              <TableCell>Fixed Amount</TableCell>
-              <TableCell>
-                <Switch defaultChecked={false} />
-              </TableCell>
-              <TableCell>
-                <Button variant="ghost" size="icon">
-                  <Pencil className="h-4 w-4 text-orange-500" />
-                </Button>
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell className="font-medium">Late Fee</TableCell>
-              <TableCell>Fixed Amount</TableCell>
-              <TableCell>
-                <Switch defaultChecked={true} />
-              </TableCell>
-              <TableCell>
-                <Button variant="ghost" size="icon">
-                  <Pencil className="h-4 w-4 text-orange-500" />
-                </Button>
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell className="font-medium">Late Fee fine</TableCell>
-              <TableCell>Day-wise Amount</TableCell>
-              <TableCell>
-                <Switch defaultChecked={true} />
-              </TableCell>
-              <TableCell>
-                <Button variant="ghost" size="icon">
-                  <Pencil className="h-4 w-4 text-orange-500" />
-                </Button>
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell className="font-medium">Late Fine</TableCell>
-              <TableCell>Slab-wise Amount</TableCell>
-              <TableCell>
-                <Switch defaultChecked={true} />
-              </TableCell>
-              <TableCell>
-                <Button variant="ghost" size="icon">
-                  <Pencil className="h-4 w-4 text-orange-500" />
-                </Button>
-              </TableCell>
-            </TableRow>
+            {feeFines.map((fine, index) => (
+              <TableRow key={index}>
+                <TableCell className="font-medium">{fine.name}</TableCell>
+                <TableCell>{fine.type}</TableCell>
+                <TableCell>
+                  <Switch defaultChecked={fine.status} />
+                </TableCell>
+                <TableCell>
+                  <Button variant="ghost" size="icon">
+                    <Pencil className="h-4 w-4 text-orange-500" />
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </Card>
@@ -488,6 +522,210 @@ export default function FeeBasics() {
               Cancel
             </Button>
             <Button onClick={handleAddSchedule}>Add Schedule</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Add Fee Component Dialog */}
+      <Dialog open={isAddComponentDialogOpen} onOpenChange={setIsAddComponentDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add Fee Component</DialogTitle>
+            <DialogDescription>Enter the details for the new fee component</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="head">Head Name</Label>
+              <Input
+                id="head"
+                placeholder="e.g., School Fees"
+                value={newComponent.head}
+                onChange={(e) => setNewComponent({ ...newComponent, head: e.target.value })}
+              />
+            </div>
+            <div>
+              <Label htmlFor="component">Component Name</Label>
+              <Input
+                id="component"
+                placeholder="e.g., Tuition Fee"
+                value={newComponent.component}
+                onChange={(e) => setNewComponent({ ...newComponent, component: e.target.value })}
+              />
+            </div>
+            <div>
+              <Label htmlFor="admission">Admission Type</Label>
+              <Select value={newComponent.admission} onValueChange={(value) => setNewComponent({ ...newComponent, admission: value })}>
+                <SelectTrigger id="admission">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="All Students">All Students</SelectItem>
+                  <SelectItem value="New">New</SelectItem>
+                  <SelectItem value="Existing">Existing</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label htmlFor="gender">Gender</Label>
+              <Select value={newComponent.gender} onValueChange={(value) => setNewComponent({ ...newComponent, gender: value })}>
+                <SelectTrigger id="gender">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="All Students">All Students</SelectItem>
+                  <SelectItem value="Male">Male</SelectItem>
+                  <SelectItem value="Female">Female</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsAddComponentDialogOpen(false)}>Cancel</Button>
+            <Button onClick={handleAddComponent}>Add Component</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Add Fee Discount Dialog */}
+      <Dialog open={isAddDiscountDialogOpen} onOpenChange={setIsAddDiscountDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add Fee Discount</DialogTitle>
+            <DialogDescription>Enter the details for the new fee discount</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="discountName">Discount Name</Label>
+              <Input
+                id="discountName"
+                placeholder="e.g., Staff Discount"
+                value={newDiscount.name}
+                onChange={(e) => setNewDiscount({ ...newDiscount, name: e.target.value })}
+              />
+            </div>
+            <div>
+              <Label htmlFor="remarks">Remarks</Label>
+              <Input
+                id="remarks"
+                placeholder="Optional remarks"
+                value={newDiscount.remarks}
+                onChange={(e) => setNewDiscount({ ...newDiscount, remarks: e.target.value })}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsAddDiscountDialogOpen(false)}>Cancel</Button>
+            <Button onClick={handleAddDiscount}>Add Discount</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Add Misc Fee Dialog */}
+      <Dialog open={isAddMiscFeeDialogOpen} onOpenChange={setIsAddMiscFeeDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add Misc. Fee</DialogTitle>
+            <DialogDescription>Enter the details for the new miscellaneous fee</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="miscHead">Head Name</Label>
+              <Input
+                id="miscHead"
+                placeholder="e.g., School Fees"
+                value={newMiscFee.head}
+                onChange={(e) => setNewMiscFee({ ...newMiscFee, head: e.target.value })}
+              />
+            </div>
+            <div>
+              <Label htmlFor="miscName">Misc. Fee Name</Label>
+              <Input
+                id="miscName"
+                placeholder="e.g., TC Fee"
+                value={newMiscFee.name}
+                onChange={(e) => setNewMiscFee({ ...newMiscFee, name: e.target.value })}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsAddMiscFeeDialogOpen(false)}>Cancel</Button>
+            <Button onClick={handleAddMiscFee}>Add Misc Fee</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Add Fee Fine Dialog */}
+      <Dialog open={isAddFineDialogOpen} onOpenChange={setIsAddFineDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add Fee Fine</DialogTitle>
+            <DialogDescription>Enter the details for the new fee fine</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="fineName">Fine Name</Label>
+              <Input
+                id="fineName"
+                placeholder="e.g., Late Fee"
+                value={newFine.name}
+                onChange={(e) => setNewFine({ ...newFine, name: e.target.value })}
+              />
+            </div>
+            <div>
+              <Label htmlFor="fineType">Fine Type</Label>
+              <Select value={newFine.type} onValueChange={(value) => setNewFine({ ...newFine, type: value })}>
+                <SelectTrigger id="fineType">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Fixed Amount">Fixed Amount</SelectItem>
+                  <SelectItem value="Day-wise Amount">Day-wise Amount</SelectItem>
+                  <SelectItem value="Slab-wise Amount">Slab-wise Amount</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="flex items-center gap-2">
+              <Switch checked={newFine.status} onCheckedChange={(checked) => setNewFine({ ...newFine, status: checked })} id="fineStatus" />
+              <Label htmlFor="fineStatus" className="cursor-pointer">Active Status</Label>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsAddFineDialogOpen(false)}>Cancel</Button>
+            <Button onClick={handleAddFine}>Add Fine</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Add Academic Year Dialog */}
+      <Dialog open={isAddAcademicYearDialogOpen} onOpenChange={setIsAddAcademicYearDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add Academic Year</DialogTitle>
+            <DialogDescription>Enter the start and end dates for the new academic year</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="yearStartDate">Start Date</Label>
+              <Input
+                id="yearStartDate"
+                type="date"
+                value={newAcademicYear.startDate}
+                onChange={(e) => setNewAcademicYear({ ...newAcademicYear, startDate: e.target.value })}
+              />
+            </div>
+            <div>
+              <Label htmlFor="yearEndDate">End Date</Label>
+              <Input
+                id="yearEndDate"
+                type="date"
+                value={newAcademicYear.endDate}
+                onChange={(e) => setNewAcademicYear({ ...newAcademicYear, endDate: e.target.value })}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsAddAcademicYearDialogOpen(false)}>Cancel</Button>
+            <Button onClick={handleAddAcademicYear}>Add Academic Year</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

@@ -34,10 +34,22 @@ const staffData = [
 
 const StaffDownloadStatus = () => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [academicYear, setAcademicYear] = useState("2025-2026");
+  const [selectedDepartment, setSelectedDepartment] = useState("all");
+  const [selectedRole, setSelectedRole] = useState("all");
+  
   const totalPages = 8;
   const loggedIn = 15;
   const notLoggedIn = 45;
   const totalStaff = loggedIn + notLoggedIn;
+
+  // Filter data based on selections
+  const filteredData = staffData.filter(staff => {
+    if (selectedDepartment !== "all" && staff.department.toLowerCase() !== selectedDepartment) {
+      return false;
+    }
+    return true;
+  });
 
   const getPageNumbers = () => {
     const pages = [];
@@ -74,7 +86,7 @@ const StaffDownloadStatus = () => {
             <Label htmlFor="academic-year" className="font-medium">
               Academic Year <span className="text-destructive">*</span>
             </Label>
-            <Select defaultValue="2025-2026">
+            <Select value={academicYear} onValueChange={setAcademicYear}>
               <SelectTrigger id="academic-year">
                 <SelectValue />
               </SelectTrigger>
@@ -91,7 +103,7 @@ const StaffDownloadStatus = () => {
             <Label htmlFor="department" className="font-medium">
               Select Department
             </Label>
-            <Select>
+            <Select value={selectedDepartment} onValueChange={setSelectedDepartment}>
               <SelectTrigger id="department">
                 <SelectValue placeholder="Select department" />
               </SelectTrigger>
@@ -100,7 +112,7 @@ const StaffDownloadStatus = () => {
                 <SelectItem value="mathematics">Mathematics</SelectItem>
                 <SelectItem value="english">English</SelectItem>
                 <SelectItem value="science">Science</SelectItem>
-                <SelectItem value="social">Social Studies</SelectItem>
+                <SelectItem value="social studies">Social Studies</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -110,7 +122,7 @@ const StaffDownloadStatus = () => {
             <Label htmlFor="role" className="font-medium">
               Select Role
             </Label>
-            <Select>
+            <Select value={selectedRole} onValueChange={setSelectedRole}>
               <SelectTrigger id="role">
                 <SelectValue placeholder="Select role" />
               </SelectTrigger>
@@ -180,7 +192,7 @@ const StaffDownloadStatus = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {staffData.map((staff) => (
+              {filteredData.map((staff) => (
                 <TableRow key={staff.id}>
                   <TableCell>
                     <div className="flex items-center gap-3">

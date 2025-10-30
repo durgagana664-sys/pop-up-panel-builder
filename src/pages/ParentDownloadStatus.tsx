@@ -34,10 +34,25 @@ const parentData = [
 
 const ParentDownloadStatus = () => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [academicYear, setAcademicYear] = useState("2025-2026");
+  const [selectedClass, setSelectedClass] = useState("all");
+  const [selectedSection, setSelectedSection] = useState("all");
+  
   const totalPages = 11;
   const loggedIn = 35;
   const notLoggedIn = 264;
   const totalParents = loggedIn + notLoggedIn;
+
+  // Filter data based on selections
+  const filteredData = parentData.filter(parent => {
+    if (selectedClass !== "all" && !parent.class.toLowerCase().includes(selectedClass.replace('a', '').trim())) {
+      return false;
+    }
+    if (selectedSection !== "all" && !parent.class.toLowerCase().includes(selectedSection)) {
+      return false;
+    }
+    return true;
+  });
 
   const getPageNumbers = () => {
     const pages = [];
@@ -74,7 +89,7 @@ const ParentDownloadStatus = () => {
             <Label htmlFor="academic-year" className="font-medium">
               Academic Year <span className="text-destructive">*</span>
             </Label>
-            <Select defaultValue="2025-2026">
+            <Select value={academicYear} onValueChange={setAcademicYear}>
               <SelectTrigger id="academic-year">
                 <SelectValue />
               </SelectTrigger>
@@ -91,16 +106,16 @@ const ParentDownloadStatus = () => {
             <Label htmlFor="class" className="font-medium">
               Select Class
             </Label>
-            <Select>
+            <Select value={selectedClass} onValueChange={setSelectedClass}>
               <SelectTrigger id="class">
                 <SelectValue placeholder="Select class" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Classes</SelectItem>
-                <SelectItem value="1a">Class 1 A</SelectItem>
-                <SelectItem value="2a">Class 2 A</SelectItem>
-                <SelectItem value="3a">Class 3 A</SelectItem>
-                <SelectItem value="ukg">UKG A</SelectItem>
+                <SelectItem value="1">Class 1</SelectItem>
+                <SelectItem value="2">Class 2</SelectItem>
+                <SelectItem value="3">Class 3</SelectItem>
+                <SelectItem value="ukg">UKG</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -110,7 +125,7 @@ const ParentDownloadStatus = () => {
             <Label htmlFor="section" className="font-medium">
               Select Section
             </Label>
-            <Select>
+            <Select value={selectedSection} onValueChange={setSelectedSection} disabled={selectedClass === "all"}>
               <SelectTrigger id="section">
                 <SelectValue placeholder="Select section" />
               </SelectTrigger>
@@ -181,7 +196,7 @@ const ParentDownloadStatus = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {parentData.map((parent) => (
+              {filteredData.map((parent) => (
                 <TableRow key={parent.id}>
                   <TableCell>
                     <div className="flex items-center gap-3">
