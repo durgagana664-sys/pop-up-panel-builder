@@ -103,7 +103,7 @@ export function Header() {
                 <div className="h-8 w-8 rounded-full bg-white/20 flex items-center justify-center">
                   <User className="h-5 w-5" />
                 </div>
-                <span className="hidden md:inline font-medium">Rajni Mehra</span>
+                <span className="hidden md:inline font-medium">Durga prasad</span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
