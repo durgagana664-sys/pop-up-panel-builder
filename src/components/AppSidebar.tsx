@@ -39,6 +39,14 @@ const menuItems = [
   { title: "Time Table", url: "/", icon: Calendar, color: "text-blue-600" },
   { title: "Student Management", url: "/", icon: Users, color: "text-orange-500" },
   {
+    title: "Password Management",
+    icon: UserCog,
+    color: "text-purple-600",
+    subItems: [
+      { title: "Reset Password", url: "/password_management/password_reset" },
+    ],
+  },
+  {
     title: "Staff Management",
     icon: UserCog,
     color: "text-purple-600",
@@ -114,6 +122,9 @@ export function AppSidebar() {
   const [openTransport, setOpenTransport] = useState(
     location.pathname.startsWith("/transport")
   );
+   const [openPassword_Management, setOpenPassword_Management] = useState(
+    location.pathname.startsWith("/poassword_management")
+  );
 
   const getNavCls = (isActive: boolean) =>
     isActive
@@ -157,12 +168,14 @@ export function AppSidebar() {
                 const isDownloadStats = item.title === "Download Statistics";
                 const isFeeManagement = item.title === "Fee Management";
                 const isTransport = item.title === "Transport Management";
+                const isPassword_Management = item.title === "Password Management";
 
                 const isOpen =
                   (isStaffManagement && openStaffManagement) ||
                   (isDownloadStats && openDownloadStats) ||
                   (isFeeManagement && openFeeManagement) ||
-                  (isTransport && openTransport);
+                  (isTransport && openTransport)||
+                  (isPassword_Management && openPassword_Management);
 
                 const setIsOpen =
                   isStaffManagement
@@ -173,6 +186,8 @@ export function AppSidebar() {
                     ? setOpenFeeManagement
                     : isTransport
                     ? setOpenTransport
+                    : isPassword_Management
+                    ? setOpenPassword_Management
                     : () => {};
 
                 return (

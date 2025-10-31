@@ -33,6 +33,7 @@ import BulkStaffImport from "./pages/staff/BulkStaffImport";
 import StaffDirectory from "./pages/staff/StaffDirectory";
 import StaffAttendance from "./pages/staff/StaffAttendance";
 import StaffMarkBulkAttendance from "./pages/staff/StaffMarkBulkAttendance";
+import PasswordReset from "./pages/password_management/password_reset";
 
 const queryClient = new QueryClient();
 
@@ -75,6 +76,7 @@ const App = () => (
             <Route path="/fee/pending-cheques" element={<PendingCheques />} />
             <Route path="/fee/invoice" element={<FeeInvoice />} />
             <Route path="/fee/reports" element={<FeeReports />} />
+            <Route path="/password_management/password_reset" element={<PasswordReset />} />
             
             <Route path="*" element={<NotFound />} />
           </Routes>
